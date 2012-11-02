@@ -13,8 +13,6 @@ public class ApiConstants {
 	// Main uri
 	public static final String URL = "http://localhost:8080/szjweb/Cont";
 	
-	
-
 	// List params
 	public static final String QUERY_LIST = "getList.action";
 	public static final String PAGENO = "pageno";
