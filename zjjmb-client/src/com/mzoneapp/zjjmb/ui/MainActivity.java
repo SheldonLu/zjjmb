@@ -1,4 +1,4 @@
-package com.mzoneapp.zjjmb;
+package com.mzoneapp.zjjmb.ui;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,14 +8,12 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.nineoldandroids.animation.ObjectAnimator;
+import com.mzoneapp.zjjmb.R;
 
 public class MainActivity extends SherlockFragmentActivity 
 		implements ActionBar.TabListener {
 
     private final Handler handler = new Handler();
-    private RoundedColourFragment leftFrag;
-    private RoundedColourFragment rightFrag;
     private boolean useLogo = false;
     private boolean showHomeUp = false;
 	
@@ -41,16 +39,7 @@ public class MainActivity extends SherlockFragmentActivity
         
         // create a couple of simple fragments as placeholders
         final int MARGIN = 8;
-        leftFrag = new RoundedColourFragment(getResources().getColor(
-                R.color.android_green), 1f, MARGIN, MARGIN / 2, MARGIN, MARGIN);
-        rightFrag = new RoundedColourFragment(getResources().getColor(
-                R.color.honeycombish_blue), 2f, MARGIN / 2, MARGIN, MARGIN,
-                MARGIN);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.root, leftFrag);
-        ft.add(R.id.root, rightFrag);
-        ft.commit();
     }
 
     @Override
@@ -59,12 +48,6 @@ public class MainActivity extends SherlockFragmentActivity
         return true;
     }
     
-    private void rotateLeftFrag() {
-        if (leftFrag != null) {
-            ObjectAnimator.ofFloat(leftFrag.getView(), "rotationY", 0, 180)
-                    .setDuration(500).start();
-        }
-    }
 
     private void showTabsNav() {
         ActionBar ab = getSupportActionBar();
@@ -76,7 +59,6 @@ public class MainActivity extends SherlockFragmentActivity
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		rotateLeftFrag();
 	}
 
 	@Override
