@@ -13,6 +13,8 @@ public class ApiConstants {
 	private static final String LOG_TAG = ApiConstants.class.getName();
 	// Main uri
 	public static final String URL = "http://localhost:8080/szjweb/Cont";
+	
+	
 
 	// List params
 	public static final String QUERY_LIST = "getList.action";
