@@ -10,5 +10,7 @@ public class HeadlinesAdapter extends ArrayAdapter<Headline> {
 	
 	public HeadlinesAdapter(Context context){
 		super(context, R.layout.list_item_headline);
+		
+		
 	}
 }
