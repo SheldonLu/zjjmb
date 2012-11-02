@@ -9,6 +9,7 @@ import android.util.Log;
 
 public class ApiConstants {
 
+	private int flag;
 	private static final String LOG_TAG = ApiConstants.class.getName();
 	// Main uri
 	public static final String URL = "http://localhost:8080/szjweb/Cont";
