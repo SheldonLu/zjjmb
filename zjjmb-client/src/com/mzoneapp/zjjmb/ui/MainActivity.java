@@ -10,6 +10,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.mzoneapp.zjjmb.R;
+import com.mzoneapp.zjjmb.api.ApiConstants;
 
 public class MainActivity extends SherlockFragmentActivity implements
 		HeadlinesFragment.OnHeadlineSelectedListener, ActionBar.TabListener,
@@ -32,6 +33,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		// TODO: 更改创建时间
+		ApiConstants.createInstance();
 
 		final ActionBar ab = getSupportActionBar();
 
@@ -90,7 +94,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	 */
 	void setNewsCategory(int catIndex) {
 		mCatIndex = catIndex;
-		mHeadlinesFragment.loadCategory(catIndex);
+//		mHeadlinesFragment.loadCategory(catIndex);
 
 		// If we are displaying the article on the right, we have to update that
 		// too

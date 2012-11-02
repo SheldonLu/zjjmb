@@ -1,32 +1,23 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.mzoneapp.zjjmb.ui;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockListFragment;
+import com.github.ignition.core.tasks.IgnitedAsyncTask;
+import com.github.ignition.support.http.IgnitedHttp;
+import com.github.ignition.support.http.IgnitedHttpResponse;
+import com.mzoneapp.zjjmb.adapter.HeadlinesAdapter;
+import com.mzoneapp.zjjmb.api.ApiConstants;
+import com.mzoneapp.zjjmb.api.Headline;
 
 /**
  * Fragment that displays the news headlines for a particular news category.
@@ -34,13 +25,12 @@ import com.actionbarsherlock.app.SherlockListFragment;
  * This Fragment displays a list with the news headlines for a particular news category.
  * When an item is selected, it notifies the configured listener that a headlines was selected.
  */
-public class HeadlinesFragment extends SherlockListFragment implements OnItemClickListener {
+public class HeadlinesFragment extends SherlockListFragment implements OnItemClickListener,OnScrollListener {
 	
-    // The list of headlines that we are displaying
-    List<String> mHeadlinesList = new ArrayList<String>();
-
     // The list adapter for the list we are displaying
-    ArrayAdapter<String> mListAdapter;
+    HeadlinesAdapter adapter;
+    
+    private IgnitedHttp http;
 
     // The listener we are to notify when a headline is selected
     OnHeadlineSelectedListener mHeadlineSelectedListener = null;
@@ -62,20 +52,70 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     public HeadlinesFragment() {
         super();
     }
+    
+    public HeadlinesFragment(Activity activity){
+    }
 
     @Override
     public void onStart() {
         super.onStart();
-        setListAdapter(mListAdapter);
+        setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
-        loadCategory(0);
+        getListView().setOnScrollListener(this);
+        loadNextPage();
+    }
+    
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+    	super.onActivityCreated(savedInstanceState);
+    	http = new IgnitedHttp(getActivity());
+    	adapter = new HeadlinesAdapter(getActivity(),getListView());
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mListAdapter = new ArrayAdapter<String>(getActivity(), R.layout.headline_item,
-//                mHeadlinesList);
+    }
+    
+    private void loadNextPage() {
+        adapter.setIsLoadingData(true);
+        IgnitedAsyncTask<MainActivity, Void, Void, Void> task = new IgnitedAsyncTask<MainActivity, Void, Void, Void>() {
+            @Override
+            public Void run(Void... params) throws Exception {
+            	String url = ApiConstants.instance().getListUrl(0);
+            	IgnitedHttpResponse response =  http.get(url).retries(3).expecting(200).send();
+            	String tmp = response.getResponseBodyAsString();
+//            	adapter.getData().add();
+                return null;
+            }
+
+            @Override
+            public boolean onTaskCompleted(Void result) {
+                adapter.setIsLoadingData(false);
+                adapter.notifyDataSetChanged();
+                return true;
+            }
+            
+            @Override
+            public boolean onTaskFailed(Exception ex){
+            	ArrayList<Headline> list = new ArrayList<Headline>();
+            	Headline line = new Headline();
+            	int start = adapter.getCount();
+            	for(int i = start;i<start+10;i++){
+            		line = new Headline();
+            		line.id = i+"";
+            		line.title = "title"+i;
+            		line.author = "author"+i;
+            		line.issuedate = "issuedate"+i;
+            		line.type = "0";
+            		list.add(line);
+            	}
+            	
+            	adapter.getData().addAll(list);
+            	return true;
+            }
+        };
+        task.execute();
     }
 
     /**
@@ -84,20 +124,6 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
      */
     public void setOnHeadlineSelectedListener(OnHeadlineSelectedListener listener) {
         mHeadlineSelectedListener = listener;
-    }
-
-    /**
-     * Load and display the headlines for the given news category.
-     * @param categoryIndex the index of the news category to display.
-     */
-    public void loadCategory(int categoryIndex) {
-        mHeadlinesList.clear();
-//        int i;
-//        NewsCategory cat = NewsSource.getInstance().getCategory(categoryIndex);
-//        for (i = 0; i < cat.getArticleCount(); i++) {
-//            mHeadlinesList.add(cat.getArticle(i).getHeadline());
-//        }
-        mListAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -124,4 +150,19 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             getListView().setChoiceMode(ListView.CHOICE_MODE_NONE);
         }
     }
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+        if (adapter.shouldRequestNextPage(firstVisibleItem, visibleItemCount, totalItemCount)) {
+            loadNextPage();
+        }
+		
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		
+	}
 }
