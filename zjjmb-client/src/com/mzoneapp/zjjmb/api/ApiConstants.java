@@ -29,7 +29,7 @@ public class ApiConstants {
 	public static final String TITLE = "title";
 	public static final String AUTHOR = "author";
 	public static final String ISSURDATE = "issuedate";
-	
+
 	// type
 	// 通知公告(默认)
 	public static final String ANNOUNCEMENT = "1";
@@ -39,33 +39,33 @@ public class ApiConstants {
 	public static final String WORK_DYNAMIC = "3";
 
 	private static ApiConstants instance;
-	
+
 	// List url
-	public String getListUrl(int type){
-		return getListUrl(type, 0 , 10);
+	public String getListUrl(int type) {
+		return getListUrl(type, 0, 10);
 	}
-	
+
 	// List url
-	public String getListUrl(int type,int pageno){
+	public String getListUrl(int type, int pageno) {
 		return getListUrl(type, pageno, 10);
 	}
-	
+
 	// List url
-	public String getListUrl(int type, int pageno, int pagesiz){
-		HashMap<String, String> params = new HashMap<String,String>();
-		params.put(TYPE, type+"");
-		params.put(PAGENO, pageno+"");
-		params.put(PAGESIZ, pagesiz+"");
-		
-		return createUrl(QUERY_INFO,params);
+	public String getListUrl(int type, int pageno, int pagesiz) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(TYPE, type + "");
+		params.put(PAGENO, pageno + "");
+		params.put(PAGESIZ, pagesiz + "");
+
+		return createUrl(QUERY_INFO, params);
 	}
-	
+
 	// Info url
-	public String getInfoUrl(int id){
-		HashMap<String, String> params = new HashMap<String,String>();
-		params.put(ID, id+"");
-		
-		return createUrl(QUERY_INFO,params);
+	public String getInfoUrl(int id) {
+		HashMap<String, String> params = new HashMap<String, String>();
+		params.put(ID, id + "");
+
+		return createUrl(QUERY_INFO, params);
 	}
 
 	public String createUrl(String path, Map<String, String> params) {
