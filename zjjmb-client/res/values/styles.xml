@@ -1,5 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="android:Theme.Light" />
+    <style name="Theme.AndroidDevelopers" parent="Theme.Sherlock.Light">
+	</style>
 
 </resources>
