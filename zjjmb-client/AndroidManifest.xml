@@ -26,7 +26,7 @@
         </activity>
         <activity android:name=".ui.WelcomeActivity" />
         <activity
-            android:name=".ui.NewsArticleActivity"
+            android:name=".ui.ArticleActivity"
             android:uiOptions="splitActionBarWhenNarrow" />
     </application>
 

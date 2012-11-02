@@ -142,7 +142,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mArticleFragment.displayArticle(null);
 		} else {
 			// use separate activity
-			Intent i = new Intent(this, NewsArticleActivity.class);
+			Intent i = new Intent(this, ArticleActivity.class);
 			i.putExtra("catIndex", mCatIndex);
 			i.putExtra("artIndex", index);
 			startActivity(i);
