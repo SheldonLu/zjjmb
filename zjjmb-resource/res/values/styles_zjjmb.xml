@@ -18,26 +18,29 @@
 
 <resources>
 
-    <style name="Theme.zjjmb" parent="@style/Theme.Sherlock">
+    <style name="Theme.zjjmb" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_zjjmb</item>
         <item name="popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
         <item name="actionBarTabStyle">@style/zjjmb_ActionBarTabStyle</item>
         <item name="actionDropDownStyle">@style/zjjmb_DropDownNav</item>
-        <item name="actionBarStyle">@style/zjjmb_transparent_ActionBar</item>
+        <item name="actionBarStyle">@style/zjjmb_solid_ActionBar</item>
 
         <item name="android:actionBarItemBackground">@drawable/selectable_background_zjjmb</item>
         <item name="android:popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
         <item name="android:actionBarTabStyle">@style/zjjmb_ActionBarTabStyle</item>
         <item name="android:actionDropDownStyle">@style/zjjmb_DropDownNav</item>
-        <item name="android:actionBarStyle">@style/zjjmb_transparent_ActionBar</item>
+        <item name="android:actionBarStyle">@style/zjjmb_solid_ActionBar</item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_zjjmb</item>
         
-        
+                <!-- Light.DarkActionBar specific -->
+        <item name="actionBarWidgetTheme">@style/Theme.zjjmb.widget</item>
+        <item name="android:actionBarWidgetTheme">@style/Theme.zjjmb.widget</item>
+
     </style>
 
-    <style name="zjjmb_solid_ActionBar" parent="@style/Widget.Sherlock.ActionBar.Solid">
+    <style name="zjjmb_solid_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <item name="background">@drawable/ab_solid_zjjmb</item>
         <item name="backgroundStacked">@drawable/ab_stacked_solid_zjjmb</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_zjjmb</item>
