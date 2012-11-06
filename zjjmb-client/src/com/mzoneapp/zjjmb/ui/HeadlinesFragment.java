@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -31,6 +32,9 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     HeadlinesAdapter adapter;
     
     private IgnitedHttp http;
+    
+    private String type;
+    private boolean isLoaded = false;
 
     // The listener we are to notify when a headline is selected
     OnHeadlineSelectedListener mHeadlineSelectedListener = null;
@@ -53,31 +57,28 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         super();
     }
     
-    public HeadlinesFragment(Activity activity){
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        setListAdapter(adapter);
-        getListView().setOnItemClickListener(this);
-        getListView().setOnScrollListener(this);
-        loadNextPage();
-    }
+//    public HeadlinesFragment(Activity activity){
+//    }
+//
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
+    	if(isLoaded) return;
+    	
+    	type = getArguments().getString(ApiConstants.TYPE);
     	http = new IgnitedHttp(getActivity());
     	ListView listView = getListView();
     	listView.setCacheColorHint(0);
     	listView.setDivider(null);
     	adapter = new HeadlinesAdapter(getActivity(),listView);
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    	
+        setListAdapter(adapter);
+        getListView().setOnItemClickListener(this);
+        getListView().setOnScrollListener(this);
+        loadNextPage();
+        
+        isLoaded = true;
     }
     
     private void loadNextPage() {
@@ -107,7 +108,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             	for(int i = start;i<start+10;i++){
             		line = new Headline();
             		line.id = i+"";
-            		line.title = "titlexxxxtitleoooootitle"+i;
+            		line.title = "titlexxxxtitleoooootitle"+i+"type="+type;
             		line.author = "author"+i;
             		line.issuedate = "2012121"+i;
             		line.desc = "desc1234desc123123desc234"+i;
