@@ -81,9 +81,9 @@ public class HeadlinesAdapter extends EndlessListAdapter<Headline> {
 
 		Headline headline = getItem(position);
 
-		ImageView icon = (ImageView) convertView.findViewById(R.id.typeIcon);
-		TextView title = (TextView) convertView.findViewById(R.id.titleText);
-		TextView author = (TextView) convertView.findViewById(R.id.authorText);
+		ImageView icon = (ImageView) convertView.findViewById(R.id.image);
+		TextView title = (TextView) convertView.findViewById(R.id.title);
+		TextView desc = (TextView) convertView.findViewById(R.id.desc);
 		TextView date = (TextView) convertView.findViewById(R.id.dateText);
 
 		// TODO： modify icon
@@ -103,7 +103,7 @@ public class HeadlinesAdapter extends EndlessListAdapter<Headline> {
 		}
 
 		title.setText(headline.title);
-		author.setText(headline.author);
+		desc.setText(headline.desc);
 		date.setText(headline.issuedate);
 
 		return convertView;

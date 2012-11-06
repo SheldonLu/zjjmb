@@ -69,7 +69,10 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     public void onActivityCreated(Bundle savedInstanceState) {
     	super.onActivityCreated(savedInstanceState);
     	http = new IgnitedHttp(getActivity());
-    	adapter = new HeadlinesAdapter(getActivity(),getListView());
+    	ListView listView = getListView();
+    	listView.setCacheColorHint(0);
+    	listView.setDivider(null);
+    	adapter = new HeadlinesAdapter(getActivity(),listView);
     }
 
     @Override
@@ -104,9 +107,10 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             	for(int i = start;i<start+10;i++){
             		line = new Headline();
             		line.id = i+"";
-            		line.title = "title"+i;
+            		line.title = "titlexxxxtitleoooootitle"+i;
             		line.author = "author"+i;
-            		line.issuedate = "issuedate"+i;
+            		line.issuedate = "2012121"+i;
+            		line.desc = "desc1234desc123123desc234"+i;
             		line.type = "0";
             		list.add(line);
             	}

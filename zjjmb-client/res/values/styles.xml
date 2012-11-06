@@ -2,5 +2,16 @@
 
     <style name="Theme.AndroidDevelopers" parent="Theme.Sherlock.Light">
 	</style>
+	<style name="text_list_title">
+        <item name="android:textSize">18.0sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/list_title_text_selector</item>
+    </style>
+    <style name="text_list_desc">
+        <item name="android:textSize">14.0sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/list_desc_text_selector</item>
+        <item name="android:lineSpacingExtra">8.0px</item>
+    </style>
 
 </resources>

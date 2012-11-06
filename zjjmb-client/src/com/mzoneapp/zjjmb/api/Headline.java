@@ -6,4 +6,5 @@ public class Headline {
 	public String author;
 	public String issuedate;
 	public String type;
+	public String desc;
 }
