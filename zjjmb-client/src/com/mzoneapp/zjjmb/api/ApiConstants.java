@@ -37,23 +37,25 @@ public class ApiConstants {
 	public static final String IN_DYNAMIC = "2";
 	// 工作动态
 	public static final String WORK_DYNAMIC = "3";
+	
+	public static final int DEFAULT_SIZE = 10;
 
 	private static ApiConstants instance;
 	
 	// List url
-	public String getListUrl(int type){
-		return getListUrl(type, 0 , 10);
+	public String getListUrl(String type){
+		return getListUrl(type, 0 , DEFAULT_SIZE);
 	}
 	
 	// List url
-	public String getListUrl(int type,int pageno){
-		return getListUrl(type, pageno, 10);
+	public String getListUrl(String type,int pageno){
+		return getListUrl(type, pageno, DEFAULT_SIZE);
 	}
 	
 	// List url
-	public String getListUrl(int type, int pageno, int pagesiz){
+	public String getListUrl(String type, int pageno, int pagesiz){
 		HashMap<String, String> params = new HashMap<String,String>();
-		params.put(TYPE, type+"");
+		params.put(TYPE, type);
 		params.put(PAGENO, pageno+"");
 		params.put(PAGESIZ, pagesiz+"");
 		

@@ -2,9 +2,7 @@ package com.mzoneapp.zjjmb.ui;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -86,7 +84,9 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         IgnitedAsyncTask<MainActivity, Void, Void, Void> task = new IgnitedAsyncTask<MainActivity, Void, Void, Void>() {
             @Override
             public Void run(Void... params) throws Exception {
-            	String url = ApiConstants.instance().getListUrl(0);
+            	int start = adapter.getItemCount();
+            	String url = ApiConstants.instance().
+            			getListUrl(type, start, start + ApiConstants.DEFAULT_SIZE -1);
             	IgnitedHttpResponse response =  http.get(url).retries(3).expecting(200).send();
             	String tmp = response.getResponseBodyAsString();
 //            	adapter.getData().add();
@@ -104,7 +104,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             public boolean onTaskFailed(Exception ex){
             	ArrayList<Headline> list = new ArrayList<Headline>();
             	Headline line = new Headline();
-            	int start = adapter.getCount();
+            	int start = adapter.getItemCount();
             	for(int i = start;i<start+10;i++){
             		line = new Headline();
             		line.id = i+"";
@@ -112,7 +112,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             		line.author = "author"+i;
             		line.issuedate = "2012121"+i;
             		line.desc = "desc1234desc123123desc234"+i;
-            		line.type = "0";
+            		line.type = type;
             		list.add(line);
             	}
             	
@@ -121,6 +121,15 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             }
         };
         task.execute();
+    }
+    
+    public void refresh(){
+    	clear();
+    	loadNextPage();
+    }
+    
+    public void clear(){
+    	adapter.getData().clear();
     }
 
     /**

@@ -209,6 +209,11 @@ public class MainActivity extends SherlockFragmentActivity implements
 			mActionBar.addTab(tab);
 			notifyDataSetChanged();
 		}
+		
+		public void refresh(){
+			int position = mActionBar.getSelectedNavigationIndex();
+			((HeadlinesFragment)mFragments.get(position)).refresh();
+		}
 
 		@Override
 		public int getCount() {
