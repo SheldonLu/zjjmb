@@ -8,6 +8,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.mzoneapp.zjjmb.R;
+import com.mzoneapp.zjjmb.api.Article;
 
 public class ArticleActivity extends SherlockFragmentActivity {
 
@@ -38,10 +39,21 @@ public class ArticleActivity extends SherlockFragmentActivity {
 
 		// Place an ArticleFragment as our content pane
 		ArticleFragment f = new ArticleFragment();
+		Article article = new Article();
+		article.author = "XXXXXXXXXXXXXXXX";
+		article.title = "YYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
+		article.issuedate = "2012-10-11";
+		article.images = new String[] {
+				"http://farm8.staticflickr.com/7017/6589270313_1236f3546f.jpg",
+				"http://farm8.staticflickr.com/7006/6647956613_a9dcecafeb.jpg",
+				"http://farm8.staticflickr.com/7143/6621178411_e52b6ab043.jpg" };
+		article.content = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
+		f.displayArticle(article);
 		getSupportFragmentManager().beginTransaction()
 				.add(android.R.id.content, f).commit();
 		// Display the correct news article on the fragment
-		f.displayArticle(null);
+
+		
 
 	}
 

@@ -17,59 +17,142 @@
 package com.mzoneapp.zjjmb.ui;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.github.ignition.core.widgets.RemoteImageView;
+import com.mzoneapp.zjjmb.R;
 import com.mzoneapp.zjjmb.api.Article;
+import com.viewpagerindicator.CirclePageIndicator;
 
 /**
  * Fragment that displays a news article.
  */
 public class ArticleFragment extends SherlockFragment {
-    // The webview where we display the article (our only view)
-    WebView mWebView;
 
-    // The article we are to display
-    Article mArticle = null;
+	View mView;
+	ViewPager mPager;
+	CirclePageIndicator mIndicator;
+	TextView mTitle;
+	TextView mAuthor;
+	TextView mDatetime;
+	TextView mContent;
 
-    // Parameterless constructor is needed by framework
-    public ArticleFragment() {
-        super();
-    }
+	// The article we are to display
+	Article mArticle = null;
 
-    /**
-     * Sets up the UI. It consists if a single WebView.
-     */
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        mWebView = new WebView(getActivity());
-        loadWebView();
-        return mWebView;
-    }
+	// Parameterless constructor is needed by framework
+	public ArticleFragment() {
+		super();
+	}
 
-    /**
-     * Displays a particular article.
-     *
-     * @param article the article to display
-     */
-    public void displayArticle(Article article) {
-    	mArticle = article;
-        loadWebView();
-    }
+	/**
+	 * Sets up the UI. It consists if a single WebView.
+	 */
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		mView = inflater.inflate(R.layout.activity_article, null);
+		mPager = (ViewPager) mView.findViewById(R.id.pager);
+		mIndicator = (CirclePageIndicator) mView.findViewById(R.id.indicator);
+		mTitle = (TextView) mView.findViewById(R.id.txt_title);
+		mAuthor = (TextView) mView.findViewById(R.id.txt_author);
+		mDatetime = (TextView) mView.findViewById(R.id.txt_datetime);
+		mContent = (TextView) mView.findViewById(R.id.txt_content);
+		return mView;
+	}
 
-    /**
-     * Loads article data into the webview.
-     *
-     * This method is called internally to update the webview's contents to the appropriate
-     * article's text.
-     */
-    void loadWebView() {
-        if (mWebView != null) {
-            mWebView.loadData(mArticle == null ? "" : mArticle.content, "text/html",
-                        "utf-8");
-        }
-    }
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		loadArticleView();
+	}
+
+	/**
+	 * Displays a particular article.
+	 * 
+	 * @param article
+	 *            the article to display
+	 */
+	public void displayArticle(Article article) {
+		mArticle = article;
+	}
+
+	/**
+	 * Loads article data into the article view.
+	 * 
+	 * This method is called internally to update the webview's contents to the
+	 * appropriate article's text.
+	 */
+	void loadArticleView() {
+		if (null != mView) {
+			ImageFragmentAdapter adapter = new ImageFragmentAdapter(
+					getFragmentManager());
+			adapter.setImages(mArticle.images);
+			mPager.setAdapter(adapter);
+			mAuthor.setText(mArticle.author);
+			mTitle.setText(mArticle.title);
+			mDatetime.setText(mArticle.issuedate);
+			mContent.setText(Html.fromHtml(mArticle.content));
+			mIndicator.setViewPager(mPager);
+		}
+	}
+
+	public static class ImageFragmentAdapter extends FragmentPagerAdapter {
+
+		private String[] mImages = new String[] {};
+
+		private int mCount = 0;
+
+		public ImageFragmentAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			return new ImageFragment(mImages[position]);
+		}
+
+		public void setImages(String[] images) {
+			mImages = images;
+			mCount = mImages.length;
+		}
+
+		@Override
+		public int getCount() {
+			return mCount;
+		}
+
+		public static class ImageFragment extends Fragment {
+
+			private String mImageUrl;
+
+			public ImageFragment(String mImageUrl) {
+				super();
+				this.mImageUrl = mImageUrl;
+			}
+			
+			public ImageFragment() {
+				super();
+			}
+
+			@Override
+			public View onCreateView(LayoutInflater inflater,
+					ViewGroup container, Bundle savedInstanceState) {
+				return new RemoteImageView(getActivity(), mImageUrl, true);
+			}
+
+		}
+
+	}
+
 }

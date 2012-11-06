@@ -2,6 +2,8 @@ package com.mzoneapp.zjjmb.ui;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AbsListView;
@@ -150,6 +152,10 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         if (null != mHeadlineSelectedListener) {
             mHeadlineSelectedListener.onHeadlineSelected(position);
         }
+        Intent i = new Intent(getActivity(), ArticleActivity.class);
+        i.putExtra("catIndex", 0);
+    	 i.putExtra("artIndex", 0);
+        startActivity(i);
     }
 
     /** Sets choice mode for the list
