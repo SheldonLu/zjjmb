@@ -7,31 +7,32 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.mzoneapp.zjjmb.R;
-import com.mzoneapp.zjjmb.api.Article;
+import com.mzoneapp.zjjmb.ui.ArticleFragment.ArticleTaskListener;
 
-public class ArticleActivity extends SherlockFragmentActivity {
+public class ArticleActivity extends SherlockFragmentActivity implements
+		ArticleTaskListener {
 
 	private boolean useLogo = true;
 	private boolean showHomeUp = true;
 
-	// The news category index and the article index for the article we are to
+	// The news the article index for the article we are to
 	// display
-	int mCatIndex, mArtIndex;
+	int mArtIndex;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mCatIndex = getIntent().getExtras().getInt("catIndex", 0);
-		mArtIndex = getIntent().getExtras().getInt("artIndex", 0);
-
+		//This has to be called before setContentView and you must use the
+        //class in com.actionbarsherlock.view and NOT android.view
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 		// If we are in two-pane layout mode, this activity is no longer
 		// necessary
 		if (getResources().getBoolean(R.bool.has_two_panes)) {
 			finish();
 			return;
 		}
-
 		final ActionBar ab = getSupportActionBar();
 		// set defaults for logo & home up
 		ab.setDisplayHomeAsUpEnabled(showHomeUp);
@@ -39,22 +40,15 @@ public class ArticleActivity extends SherlockFragmentActivity {
 
 		// Place an ArticleFragment as our content pane
 		ArticleFragment f = new ArticleFragment();
-		Article article = new Article();
-		article.author = "XXXXXXXXXXXXXXXX";
-		article.title = "YYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
-		article.issuedate = "2012-10-11";
-		article.images = new String[] {
-				"http://farm8.staticflickr.com/7017/6589270313_1236f3546f.jpg",
-				"http://farm8.staticflickr.com/7006/6647956613_a9dcecafeb.jpg",
-				"http://farm8.staticflickr.com/7143/6621178411_e52b6ab043.jpg" };
-		article.content = "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ";
-		f.displayArticle(article);
 		getSupportFragmentManager().beginTransaction()
 				.add(android.R.id.content, f).commit();
 		// Display the correct news article on the fragment
-
-		
-
+		Bundle bd = getIntent().getExtras();
+		if(null == bd.getString("id")){
+			finish();
+			return;
+		}
+		f.setArguments(bd);
 	}
 
 	@Override
@@ -75,6 +69,21 @@ public class ArticleActivity extends SherlockFragmentActivity {
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	public void onTaskStarted() {
+		setProgressBarVisibility(true);
+	}
+
+	@Override
+	public void onTaskCompleted() {
+		setProgressBarVisibility(false);
+	}
+
+	@Override
+	public void onTaskFailed() {
+		setProgressBarVisibility(false);
 	}
 
 }

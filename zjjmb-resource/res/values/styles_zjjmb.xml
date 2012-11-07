@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- File created by the Android Action Bar Style Generator
+<!--
+     File created by the Android Action Bar Style Generator
 
      Copyright (C) 2012 readyState Software Ltd
 
@@ -16,7 +17,7 @@
      limitations under the License.
 -->
 
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.zjjmb" parent="@style/Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarItemBackground">@drawable/selectable_background_zjjmb</item>
@@ -25,7 +26,7 @@
         <item name="actionBarTabStyle">@style/zjjmb_ActionBarTabStyle</item>
         <item name="actionDropDownStyle">@style/zjjmb_DropDownNav</item>
         <item name="actionBarStyle">@style/zjjmb_solid_ActionBar</item>
-
+        <item name="actionBarTabTextStyle">@style/zjjmb_ActionBarTabTextStyle</item>
         <item name="android:actionBarItemBackground">@drawable/selectable_background_zjjmb</item>
         <item name="android:popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
@@ -33,11 +34,10 @@
         <item name="android:actionDropDownStyle">@style/zjjmb_DropDownNav</item>
         <item name="android:actionBarStyle">@style/zjjmb_solid_ActionBar</item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_zjjmb</item>
-        
-                <!-- Light.DarkActionBar specific -->
+
+        <!-- Light.DarkActionBar specific -->
         <item name="actionBarWidgetTheme">@style/Theme.zjjmb.widget</item>
         <item name="android:actionBarWidgetTheme">@style/Theme.zjjmb.widget</item>
-
     </style>
 
     <style name="zjjmb_solid_ActionBar" parent="@style/Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -45,7 +45,6 @@
         <item name="backgroundStacked">@drawable/ab_stacked_solid_zjjmb</item>
         <item name="backgroundSplit">@drawable/ab_bottom_solid_zjjmb</item>
         <item name="progressBarStyle">@style/zjjmb_ProgressBar</item>
-
         <item name="android:background">@drawable/ab_solid_zjjmb</item>
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_zjjmb</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_zjjmb</item>
@@ -55,42 +54,44 @@
     <style name="zjjmb_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">
         <item name="background">@drawable/ab_transparent_zjjmb</item>
         <item name="progressBarStyle">@style/zjjmb_ProgressBar</item>
-        
         <item name="android:background">@drawable/ab_transparent_zjjmb</item>
         <item name="android:progressBarStyle">@style/zjjmb_ProgressBar</item>
     </style>
-	
-    <style name="zjjmb_PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">	
-        <item name="android:popupBackground">@drawable/menu_dropdown_panel_zjjmb</item>	
+
+    <style name="zjjmb_PopupMenu" parent="@style/Widget.Sherlock.ListPopupWindow">
+        <item name="android:popupBackground">@drawable/menu_dropdown_panel_zjjmb</item>
     </style>
-	
+
     <style name="zjjmb_DropDownListView" parent="@style/Widget.Sherlock.ListView.DropDown">
         <item name="android:listSelector">@drawable/selectable_background_zjjmb</item>
     </style>
 
     <style name="zjjmb_ActionBarTabStyle" parent="@style/Widget.Sherlock.ActionBar.TabView">
         <item name="background">@drawable/tab_indicator_ab_zjjmb</item>
-
         <item name="android:background">@drawable/tab_indicator_ab_zjjmb</item>
     </style>
-	
+
+    <style name="zjjmb_ActionBarTabTextStyle" parent="Widget.Sherlock.ActionBar.TabText">
+        <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="zjjmb_DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
         <item name="background">@drawable/spinner_background_ab_zjjmb</item>
-
         <item name="android:background">@drawable/spinner_background_ab_zjjmb</item>
         <item name="android:popupBackground">@drawable/menu_dropdown_panel_zjjmb</item>
         <item name="android:dropDownSelector">@drawable/selectable_background_zjjmb</item>
     </style>
-    
+
     <style name="zjjmb_ProgressBar" parent="@style/Widget.Sherlock.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/progress_horizontal_zjjmb</item>
     </style>
-    
+
     <!-- this style is only referenced in a Light.DarkActionBar based theme -->
     <style name="Theme.zjjmb.widget" parent="@style/Theme.Sherlock">
         <item name="popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
-        
         <item name="android:popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
     </style>

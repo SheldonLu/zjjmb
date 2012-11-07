@@ -63,7 +63,7 @@ public class ApiConstants {
 	}
 	
 	// Info url
-	public String getInfoUrl(int id){
+	public String getInfoUrl(String id){
 		HashMap<String, String> params = new HashMap<String,String>();
 		params.put(ID, id+"");
 		

@@ -2,14 +2,9 @@
 
     <item
         android:id="@+id/menu_reflesh"
+        android:icon="@drawable/ic_action_refresh"
         android:orderInCategory="100"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_settings"/>
-    
-    <item
-        android:id="@+id/menu_settings"
-        android:orderInCategory="100"
-        android:showAsAction="ifRoom|withText"
-        android:title="@string/menu_settings"/>
-    
+        android:showAsAction="ifRoom"
+        android:title="@string/menu_reflesh"/>
+
 </menu>
