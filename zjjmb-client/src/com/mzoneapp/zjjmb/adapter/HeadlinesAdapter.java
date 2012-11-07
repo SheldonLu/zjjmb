@@ -9,10 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.ignition.core.adapters.EndlessListAdapter;
+import com.github.ignition.core.widgets.RemoteImageView;
 import com.mzoneapp.zjjmb.R;
 import com.mzoneapp.zjjmb.api.Headline;
 
@@ -81,30 +81,15 @@ public class HeadlinesAdapter extends EndlessListAdapter<Headline> {
 
 		Headline headline = getItem(position);
 
-		ImageView icon = (ImageView) convertView.findViewById(R.id.image);
+		RemoteImageView icon = (RemoteImageView) convertView.findViewById(R.id.image);
 		TextView title = (TextView) convertView.findViewById(R.id.title);
 		TextView desc = (TextView) convertView.findViewById(R.id.desc);
 		TextView date = (TextView) convertView.findViewById(R.id.dateText);
 
-		// TODO： modify icon
-		switch (Integer.valueOf(headline.type)) {
-		case 1:
-			// 通知公告 icon
-			icon.setImageResource(R.drawable.ic_launcher);
-			break;
-		case 2:
-			// 局内动态 icon
-			icon.setImageResource(R.drawable.ic_launcher);
-			break;
-		case 3:
-			// 工作动态 icon
-			icon.setImageResource(R.drawable.ic_launcher);
-			break;
-		}
-
 		title.setText(headline.title);
-		desc.setText(headline.desc);
-		date.setText(headline.issuedate);
+//		desc.setText(headline.desc);
+		desc.setText("有专家建议2015年全面放开二胎政策,也有专家说放开二胎政策,百害而无一利. 网间对其利弊也开始了热闹的讨论");
+		date.setText(headline.issuedate.split(" ")[0]);
 
 		return convertView;
 	}

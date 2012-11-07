@@ -2,9 +2,14 @@ package com.mzoneapp.zjjmb.ui;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -35,6 +40,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     
     private String type;
     private boolean isLoaded = false;
+    private boolean isNull = false;
 
     // The listener we are to notify when a headline is selected
     OnHeadlineSelectedListener mHeadlineSelectedListener = null;
@@ -87,11 +93,44 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             @Override
             public Void run(Void... params) throws Exception {
             	int start = adapter.getItemCount();
+            	int pageno = start / ApiConstants.DEFAULT_SIZE + 1;
             	String url = ApiConstants.instance().
-            			getListUrl(type, start, start + ApiConstants.DEFAULT_SIZE -1);
+            			getListUrl(type, start);
             	IgnitedHttpResponse response =  http.get(url).retries(3).expecting(200).send();
-            	String tmp = response.getResponseBodyAsString();
-//            	adapter.getData().add();
+            	String responseBody = response.getResponseBodyAsString();
+            	
+            	Object result = null;
+         		responseBody = responseBody.trim();
+         		if(responseBody.startsWith("{") || responseBody.startsWith("[")) {
+         			result = new JSONTokener(responseBody).nextValue();
+         		}
+         		if(result instanceof JSONObject) {
+         			// TODO
+                    JSONObject jsonObject = (JSONObject)result;
+                } else if(result instanceof JSONArray) {
+                    JSONArray jsonArray = (JSONArray)result;
+                    int length = jsonArray.length();
+                    // no result, not load next time
+                    if( 0 == length) isNull = true;
+//                    if( length < ApiConstants.DEFAULT_SIZE) isNull = true;
+                    ArrayList<Headline> list = new ArrayList<Headline>();
+                    for(int i = 0; i < length; i++){
+                    	JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    	Headline line = new Headline();
+                    	line.id = jsonObject.getString("id");
+                    	line.author = jsonObject.getString("author");
+                    	line.issuedate = jsonObject.getString("issuedate");
+                    	line.title = jsonObject.getString("title");
+                    	line.type = jsonObject.getString("type");
+                    	list.add(line);
+                    }
+                    
+                    adapter.getData().addAll(list);
+                } else {
+                	// TODO 更完善的异常处理
+                	isNull = true;
+                	throw new JSONException("Unexpected type " + result.getClass().getName());
+                }
                 return null;
             }
 
@@ -174,7 +213,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
-        if (adapter.shouldRequestNextPage(firstVisibleItem, visibleItemCount, totalItemCount)) {
+        if (!isNull && adapter.shouldRequestNextPage(firstVisibleItem, visibleItemCount, totalItemCount)) {
             loadNextPage();
         }
 		

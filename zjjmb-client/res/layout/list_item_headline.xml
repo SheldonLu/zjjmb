@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ignition="http://github.com/ignition/schema"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/list_selector"
@@ -7,41 +8,41 @@
     android:paddingRight="8dp"
     android:paddingTop="8dp" >
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/ic_launcher" />
-
     <TextView
         android:id="@+id/title"
         style="@style/text_list_title"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/image"
-        android:layout_marginLeft="8dp"
-        android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
-
+        android:text="专家呼吁全面放开二胎政策 专家呼吁全面放开二胎政策 " />
+    
     <TextView
         android:id="@+id/desc"
         style="@style/text_list_desc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/title"
-        android:layout_below="@+id/title"
-        android:text="qoadsfpohhfuhshdfjf" />
+        android:layout_alignLeft="@id/title"
+        android:layout_below="@id/title"
+        android:layout_toLeftOf="@+id/dateText"
+        android:text="有专家建议2015年全面放开二胎政策,也有专家说放开二胎政策,百害而无一利. 网间对其利弊也开始了热闹的讨论" />
 
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/desc"
-        android:layout_marginRight="16dp"
-        android:gravity="center_vertical"
-        android:text="2012-12-12" />
+    	<TextView
+    	    android:id="@+id/dateText"
+    	    style="@style/text_date"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignBottom="@id/desc"
+    	    android:layout_alignParentRight="true"
+    	    android:gravity="center_vertical"
+    	    android:text="2012-12-12" />
+
+    	<com.github.ignition.core.widgets.RemoteImageView
+    	    android:id="@+id/image"
+    	    android:layout_width="48dp"
+    	    android:layout_height="wrap_content"
+    	    android:layout_alignTop="@+id/desc"
+    	    android:layout_toRightOf="@+id/desc"
+    	    android:tag="image1"
+    	    ignition:imageUrl="http://developer.android.com/images/home/android-design.png" />
 
 </RelativeLayout>

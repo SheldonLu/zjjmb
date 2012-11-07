@@ -13,5 +13,10 @@
         <item name="android:textColor">@color/list_desc_text_selector</item>
         <item name="android:lineSpacingExtra">8.0px</item>
     </style>
+	<style name="text_date">
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/color_list_desc</item>
+    </style>
 
 </resources>

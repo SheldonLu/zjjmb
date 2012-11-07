@@ -11,7 +11,7 @@ public class ApiConstants {
 
 	private static final String LOG_TAG = ApiConstants.class.getName();
 	// Main uri
-	public static final String URL = "http://localhost:8080/szjweb/Cont";
+	public static final String URL = "http://www.expressway.gov.cn/szjweb/Cont";
 	
 	// List params
 	public static final String QUERY_LIST = "getList.action";
@@ -59,7 +59,7 @@ public class ApiConstants {
 		params.put(PAGENO, pageno+"");
 		params.put(PAGESIZ, pagesiz+"");
 		
-		return createUrl(QUERY_INFO,params);
+		return createUrl(QUERY_LIST,params);
 	}
 	
 	// Info url
