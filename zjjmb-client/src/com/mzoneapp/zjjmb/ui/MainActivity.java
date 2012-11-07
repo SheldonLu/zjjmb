@@ -121,7 +121,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// If we are displaying the article on the right, we have to update that
 		// too
 		if (mIsDualPane) {
-			mArticleFragment.displayArticle(null);
+//			mArticleFragment.displayArticle(null);
 		}
 	}
 

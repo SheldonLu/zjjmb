@@ -16,20 +16,28 @@
 
 package com.mzoneapp.zjjmb.ui;
 
+import org.json.JSONObject;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.github.ignition.core.tasks.IgnitedAsyncTask;
 import com.github.ignition.core.widgets.RemoteImageView;
+import com.github.ignition.support.http.IgnitedHttp;
 import com.mzoneapp.zjjmb.R;
+import com.mzoneapp.zjjmb.api.ApiConstants;
 import com.mzoneapp.zjjmb.api.Article;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -42,17 +50,35 @@ public class ArticleFragment extends SherlockFragment {
 	ViewPager mPager;
 	CirclePageIndicator mIndicator;
 	TextView mTitle;
-	TextView mAuthor;
 	TextView mDatetime;
 	TextView mContent;
+	RelativeLayout mLayoutPager;
 
 	// The article we are to display
 	Article mArticle = null;
+	
+	// Represents a listener that will be notified of ArticleTask
+	ArticleTaskListener mArticleTaskListener = null;
+	IgnitedAsyncTask<ArticleActivity, String, Void, Article> mArticleTask = null;
 
 	// Parameterless constructor is needed by framework
 	public ArticleFragment() {
 		super();
 	}
+	
+	public interface ArticleTaskListener {
+		void onTaskStarted();
+		void onTaskCompleted();
+		void onTaskFailed();
+	}
+	
+	 /**
+     * Sets the listener that should be notified of headline selection events.
+     * @param listener the listener to notify.
+     */
+    public void setOnArticleTaskListener(ArticleTaskListener listener) {
+    	mArticleTaskListener = listener;
+    }
 
 	/**
 	 * Sets up the UI. It consists if a single WebView.
@@ -64,27 +90,17 @@ public class ArticleFragment extends SherlockFragment {
 		mPager = (ViewPager) mView.findViewById(R.id.pager);
 		mIndicator = (CirclePageIndicator) mView.findViewById(R.id.indicator);
 		mTitle = (TextView) mView.findViewById(R.id.txt_title);
-		mAuthor = (TextView) mView.findViewById(R.id.txt_author);
 		mDatetime = (TextView) mView.findViewById(R.id.txt_datetime);
 		mContent = (TextView) mView.findViewById(R.id.txt_content);
+		mLayoutPager = (RelativeLayout) mView.findViewById(R.id.layout_pager);
 		return mView;
 	}
 
-	
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		loadArticleView();
-	}
-
-	/**
-	 * Displays a particular article.
-	 * 
-	 * @param article
-	 *            the article to display
-	 */
-	public void displayArticle(Article article) {
-		mArticle = article;
+		executeArticleTask();
 	}
 
 	/**
@@ -94,19 +110,95 @@ public class ArticleFragment extends SherlockFragment {
 	 * appropriate article's text.
 	 */
 	void loadArticleView() {
-		if (null != mView) {
-			ImageFragmentAdapter adapter = new ImageFragmentAdapter(
-					getFragmentManager());
-			adapter.setImages(mArticle.images);
-			mPager.setAdapter(adapter);
-			mAuthor.setText(mArticle.author);
+		mArticle = Article.fromBundleToArticle(getArguments());
+		if (null != mView && null != mArticle) {
 			mTitle.setText(mArticle.title);
 			mDatetime.setText(mArticle.issuedate);
 			mContent.setText(Html.fromHtml(mArticle.content));
-			mIndicator.setViewPager(mPager);
+			// show image view pager
+			if (mArticle.images != null) {
+				mLayoutPager.setVisibility(View.VISIBLE);
+				ImageFragmentAdapter adapter = new ImageFragmentAdapter(
+						getFragmentManager());
+				adapter.setImages(mArticle.images);
+				mPager.setAdapter(adapter);
+				mIndicator.setViewPager(mPager);
+				final float density = getResources().getDisplayMetrics().density;
+				mIndicator.setBackgroundColor(0x40000000);
+				mIndicator.setRadius(4 * density);
+				mIndicator.setPageColor(0xFFFFFFFF);
+				mIndicator.setFillColor(Color.rgb(50,181,229));
+//				mIndicator.setStrokeColor(0xFFFFFFFF);
+//				mIndicator.setStrokeWidth(1 * density);
+			}
 		}
 	}
+	
+	/**
+	 * get article data from network.
+	 */
+	void executeArticleTask(){
+		if(null == mArticle)
+			return;
+		if(null != mArticleTask) {
+			if (mArticleTask.isPending())
+				mArticleTask.cancel(true);
+		}
+		mArticleTask = new IgnitedAsyncTask<ArticleActivity, String, Void, Article>(){
+			
+			@Override
+			public boolean onTaskStarted() {
+				mArticleTaskListener.onTaskStarted();
+				return super.onTaskStarted();
+			}
 
+			@Override
+			public Article run(String... params) throws Exception {
+				IgnitedHttp http = new IgnitedHttp(getActivity());
+				String body = http.get(ApiConstants.instance().getInfoUrl(params[0]), true).send().getResponseBodyAsString();
+				if(body != null){
+					try {
+						JSONObject obj = new JSONObject(body);
+						String id = obj.getString("id");
+						String author = obj.getString("author");
+						String content = obj.getString("content");
+						String title = obj.getString("title");
+						String issuedate = obj.getString("issuedate");
+						Article article = new Article();
+						article.id = id;
+						article.author = author;
+						article.content = content;
+						article.title = title;
+						article.content = content;
+						article.issuedate = issuedate;
+						return article;
+					} catch (Exception e) {
+						Log.d("debug", "json parse error!");
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public boolean onTaskCompleted(Article result) {
+				mArticleTaskListener.onTaskCompleted();
+				if(null != result){
+					mArticle = result;
+					loadArticleView();
+				}
+				return super.onTaskCompleted(result);
+			}
+
+			@Override
+			public boolean onTaskFailed(Exception error) {
+				mArticleTaskListener.onTaskFailed();
+				return super.onTaskFailed(error);
+			}
+			
+		};
+		mArticleTask.execute(mArticle.id);
+	}
+	
 	public static class ImageFragmentAdapter extends FragmentPagerAdapter {
 
 		private String[] mImages = new String[] {};
@@ -119,7 +211,7 @@ public class ArticleFragment extends SherlockFragment {
 
 		@Override
 		public Fragment getItem(int position) {
-			return new ImageFragment(mImages[position]);
+			return ImageFragment.newInstance(mImages[position]);
 		}
 
 		public void setImages(String[] images) {
@@ -134,21 +226,58 @@ public class ArticleFragment extends SherlockFragment {
 
 		public static class ImageFragment extends Fragment {
 
-			private String mImageUrl;
+			public static final String IMAGE_URL = "image_url";
 
-			public ImageFragment(String mImageUrl) {
-				super();
-				this.mImageUrl = mImageUrl;
-			}
-			
 			public ImageFragment() {
 				super();
+			}
+
+			/**
+			 * Create a new instance of ImageFragment, initialized to show the
+			 * text at 'url'.
+			 */
+			public static ImageFragment newInstance(String url) {
+				ImageFragment f = new ImageFragment();
+
+				// Supply index input as an argument.
+				Bundle args = new Bundle();
+				args.putString(IMAGE_URL, url);
+				f.setArguments(args);
+
+				return f;
+			}
+
+			public String getImageUrl() {
+				return getArguments().getString(IMAGE_URL);
 			}
 
 			@Override
 			public View onCreateView(LayoutInflater inflater,
 					ViewGroup container, Bundle savedInstanceState) {
-				return new RemoteImageView(getActivity(), mImageUrl, true);
+				if (container == null) {
+					// We have different layouts, and in one of them this
+					// fragment's containing frame doesn't exist. The fragment
+					// may still be created from its saved state, but there is
+					// no reason to try to create its view hierarchy because it
+					// won't be displayed. Note this is not needed -- we could
+					// just run the code below, where we would create and return
+					// the view hierarchy; it would just never be used.
+					return null;
+				}
+				return inflater.inflate(R.layout.image_article, container,
+						false);
+			}
+
+			@Override
+			public void onActivityCreated(Bundle savedInstanceState) {
+				super.onActivityCreated(savedInstanceState);
+				RemoteImageView rImg = ((RemoteImageView) getView()
+						.findViewById(R.id.thumbnail));
+				String url = getImageUrl();
+				if (null != url) {
+					rImg.setImageUrl(url);
+					rImg.loadImage();
+				}
 			}
 
 		}
