@@ -1,10 +1,17 @@
 package com.mzoneapp.zjjmb.api;
 
+import java.io.Serializable;
+
 import android.os.Bundle;
 
-public class Article extends Headline {
+public class Article implements Serializable {
 
-	public String content;
+	public String id;
+	public String title;
+	public String author;
+	public String issuedate;
+	public String type;
+	public String desc;
 	public String[] images;
 
 	public static Article fromBundleToArticle(Bundle bd) {
@@ -14,7 +21,7 @@ public class Article extends Headline {
 		article.title = bd.getString("title");
 		article.author = bd.getString("author");
 		article.issuedate = bd.getString("issuedate");
-		article.content = bd.getString("content");
+		article.desc = bd.getString("desc");
 		article.images = bd.getStringArray("images");
 		article.type = bd.getString("type");
 		return article;
@@ -27,7 +34,7 @@ public class Article extends Headline {
 		bd.putString("title", article.title);
 		bd.putString("author", article.author);
 		bd.putString("issuedate", article.issuedate);
-		bd.putString("content", article.content);
+		bd.putString("desc", article.desc);
 		bd.putString("type", article.type);
 		bd.putStringArray("images", article.images);
 		return bd;

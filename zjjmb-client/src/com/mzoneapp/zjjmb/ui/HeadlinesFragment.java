@@ -9,7 +9,6 @@ import org.json.JSONTokener;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -21,9 +20,9 @@ import com.actionbarsherlock.app.SherlockListFragment;
 import com.github.ignition.core.tasks.IgnitedAsyncTask;
 import com.github.ignition.support.http.IgnitedHttp;
 import com.github.ignition.support.http.IgnitedHttpResponse;
-import com.mzoneapp.zjjmb.adapter.HeadlinesAdapter;
+import com.mzoneapp.zjjmb.adapter.ArticleAdapter;
 import com.mzoneapp.zjjmb.api.ApiConstants;
-import com.mzoneapp.zjjmb.api.Headline;
+import com.mzoneapp.zjjmb.api.Article;
 
 /**
  * Fragment that displays the news headlines for a particular news category.
@@ -34,7 +33,7 @@ import com.mzoneapp.zjjmb.api.Headline;
 public class HeadlinesFragment extends SherlockListFragment implements OnItemClickListener,OnScrollListener {
 	
     // The list adapter for the list we are displaying
-    HeadlinesAdapter adapter;
+    ArticleAdapter adapter;
     
     private IgnitedHttp http;
     
@@ -77,7 +76,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     	ListView listView = getListView();
     	listView.setCacheColorHint(0);
     	listView.setDivider(null);
-    	adapter = new HeadlinesAdapter(getActivity(),listView);
+    	adapter = new ArticleAdapter(getActivity(),listView);
     	
         setListAdapter(adapter);
         getListView().setOnItemClickListener(this);
@@ -113,15 +112,16 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
                     // no result, not load next time
                     if( 0 == length) isNull = true;
 //                    if( length < ApiConstants.DEFAULT_SIZE) isNull = true;
-                    ArrayList<Headline> list = new ArrayList<Headline>();
+                    ArrayList<Article> list = new ArrayList<Article>();
                     for(int i = 0; i < length; i++){
                     	JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    	Headline line = new Headline();
+                    	Article line = new Article();
                     	line.id = jsonObject.getString("id");
                     	line.author = jsonObject.getString("author");
                     	line.issuedate = jsonObject.getString("issuedate");
                     	line.title = jsonObject.getString("title");
                     	line.type = jsonObject.getString("type");
+                    	line.desc = "有专家建议2015年全面放开二胎政策,也有专家说放开二胎政策,百害而无一利. 网间对其利弊也开始了热闹的讨论";
                     	list.add(line);
                     }
                     
@@ -143,11 +143,11 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             
             @Override
             public boolean onTaskFailed(Exception ex){
-            	ArrayList<Headline> list = new ArrayList<Headline>();
-            	Headline line = new Headline();
+            	ArrayList<Article> list = new ArrayList<Article>();
+            	Article line = new Article();
             	int start = adapter.getItemCount();
             	for(int i = start;i<start+10;i++){
-            		line = new Headline();
+            		line = new Article();
             		line.id = i+"";
             		line.title = "titlexxxxtitleoooootitle"+i+"type="+type;
             		line.author = "author"+i;
@@ -191,9 +191,9 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         if (null != mHeadlineSelectedListener) {
             mHeadlineSelectedListener.onHeadlineSelected(position);
         }
+        Article article = adapter.getData().get(position);
         Intent i = new Intent(getActivity(), ArticleActivity.class);
-        i.putExtra("catIndex", 0);
-    	 i.putExtra("artIndex", 0);
+        i.putExtras(Article.convertArticleToBundle(article));
         startActivity(i);
     }
 

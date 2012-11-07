@@ -40,6 +40,7 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 
 		// Place an ArticleFragment as our content pane
 		ArticleFragment f = new ArticleFragment();
+		f.setOnArticleTaskListener(this);
 		getSupportFragmentManager().beginTransaction()
 				.add(android.R.id.content, f).commit();
 		// Display the correct news article on the fragment

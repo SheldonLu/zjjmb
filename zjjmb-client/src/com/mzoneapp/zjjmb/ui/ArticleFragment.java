@@ -114,7 +114,7 @@ public class ArticleFragment extends SherlockFragment {
 		if (null != mView && null != mArticle) {
 			mTitle.setText(mArticle.title);
 			mDatetime.setText(mArticle.issuedate);
-			mContent.setText(Html.fromHtml(mArticle.content));
+			mContent.setText(Html.fromHtml(mArticle.desc));
 			// show image view pager
 			if (mArticle.images != null) {
 				mLayoutPager.setVisibility(View.VISIBLE);
@@ -167,9 +167,8 @@ public class ArticleFragment extends SherlockFragment {
 						Article article = new Article();
 						article.id = id;
 						article.author = author;
-						article.content = content;
+						article.desc = content;
 						article.title = title;
-						article.content = content;
 						article.issuedate = issuedate;
 						return article;
 					} catch (Exception e) {
