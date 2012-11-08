@@ -75,8 +75,8 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     	type = getArguments().getString(ApiConstants.TYPE);
     	http = new IgnitedHttp(getActivity());
     	ListView listView = getListView();
-    	listView.setCacheColorHint(0);
-    	listView.setDivider(null);
+//    	listView.setCacheColorHint();
+//    	listView.setDivider(null);
     	adapter = new ArticleAdapter(getActivity(),listView);
     	
         setListAdapter(adapter);
