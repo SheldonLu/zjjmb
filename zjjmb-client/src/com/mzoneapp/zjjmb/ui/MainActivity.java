@@ -68,6 +68,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		bundle.putString(ApiConstants.TYPE, ApiConstants.WORK_DYNAMIC);
 		mTabsAdapter.addTab(ab.newTab().setText("工作动态"),
 				HeadlinesFragment.class, bundle);
+		
+		mViewPager.setOffscreenPageLimit(2);
 
 		// set up tabs nav
 		// ab.addTab(ab.newTab().setText("通知公告").setTabListener(this));
@@ -103,7 +105,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 			setNewsCategory(savedInstanceState.getInt("catIndex", 0));
 			if (mIsDualPane) {
 				int artIndex = savedInstanceState.getInt("artIndex", 0);
-				mHeadlinesFragment.setSelection(artIndex);
+//				mHeadlinesFragment.setSelection(artIndex);
 				// onHeadlineSelected(artIndex);
 			}
 		}
@@ -179,18 +181,17 @@ public class MainActivity extends SherlockFragmentActivity implements
 		private final Context mContext;
 		private final ActionBar mActionBar;
 		private final ViewPager mViewPager;
-		private final ArrayList<Fragment> mFragments = new ArrayList<Fragment>();
-//		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
-//
-//		static final class TabInfo {
-//			private final Class<?> clss;
-//			private final Bundle args;
-//
-//			TabInfo(Class<?> _class, Bundle _args) {
-//				clss = _class;
-//				args = _args;
-//			}
-//		}
+		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+
+		static final class TabInfo {
+			private final Class<?> clss;
+			private final Bundle args;
+
+			TabInfo(Class<?> _class, Bundle _args) {
+				clss = _class;
+				args = _args;
+			}
+		}
 
 		public TabsAdapter(SherlockFragmentActivity activity, ViewPager pager) {
 			super(activity.getSupportFragmentManager());
@@ -202,28 +203,30 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 
 		public void addTab(ActionBar.Tab tab, Class<?> clss, Bundle args) {
-//			TabInfo info = new TabInfo(clss, args);
-			Fragment fragment = Fragment.instantiate(mContext, clss.getName(),args);
-			tab.setTag(fragment);
+			TabInfo info = new TabInfo(clss, args);
+			tab.setTag(info);
 			tab.setTabListener(this);
-			mFragments.add(fragment);
+			mTabs.add(info);
 			mActionBar.addTab(tab);
 			notifyDataSetChanged();
 		}
 		
 		public void refresh(){
 			int position = mActionBar.getSelectedNavigationIndex();
-			((HeadlinesFragment)mFragments.get(position)).refresh();
+//			((HeadlinesFragment)mFragments.get(position)).refresh();
 		}
 
 		@Override
 		public int getCount() {
-			return mFragments.size();
+			return mTabs.size();
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			return mFragments.get(position);
+			TabInfo info = mTabs.get(position);
+			return Fragment.instantiate(mContext, info.clss.getName(),
+					info.args);
+//			return mFragments.get(position);
 		}
 
 		@Override
@@ -243,8 +246,8 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public void onTabSelected(Tab tab, FragmentTransaction ft) {
 			Object tag = tab.getTag();
-			for (int i = 0; i < mFragments.size(); i++) {
-				if (mFragments.get(i) == tag) {
+			for (int i = 0; i < mTabs.size(); i++) {
+				if (mTabs.get(i) == tag) {
 					mViewPager.setCurrentItem(i);
 				}
 			}

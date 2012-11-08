@@ -4,6 +4,6 @@
   android:layout_height="?android:attr/listPreferredItemHeight"
   android:gravity="center"
   android:textAppearance="@android:style/TextAppearance.Large"
-  android:text="Loading...">
+  android:text="加载中...">
 
 </TextView>
