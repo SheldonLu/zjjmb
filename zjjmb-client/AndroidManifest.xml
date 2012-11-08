@@ -32,8 +32,7 @@
         <activity android:name=".ui.WelcomeActivity" />
         <activity
             android:name=".ui.ArticleActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:uiOptions="splitActionBarWhenNarrow" />
+            android:configChanges="orientation|keyboardHidden" />
     </application>
 
 </manifest>

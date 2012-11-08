@@ -105,6 +105,10 @@ public class ArticleFragment extends SherlockFragment {
 		loadArticleView();
 		executeArticleTask();
 	}
+	
+	public void reflersh(){
+		executeArticleTask();
+	}
 
 	/**
 	 * Loads article data into the article view.
