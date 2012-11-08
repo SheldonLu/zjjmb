@@ -1,5 +1,6 @@
 package com.mzoneapp.zjjmb.ui;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -94,43 +95,41 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             	int start = adapter.getItemCount();
             	int pageno = start / ApiConstants.DEFAULT_SIZE + 1;
             	String url = ApiConstants.instance().
-            			getListUrl(type, start);
+            			getListUrl(type, pageno);
             	IgnitedHttpResponse response =  http.get(url).retries(3).expecting(200).send();
             	String responseBody = response.getResponseBodyAsString();
             	
-            	Object result = null;
+//            	Object result = null;
          		responseBody = responseBody.trim();
-         		if(responseBody.startsWith("{") || responseBody.startsWith("[")) {
-         			result = new JSONTokener(responseBody).nextValue();
-         		}
-         		if(result instanceof JSONObject) {
-         			// TODO
-                    JSONObject jsonObject = (JSONObject)result;
-                } else if(result instanceof JSONArray) {
-                    JSONArray jsonArray = (JSONArray)result;
-                    int length = jsonArray.length();
-                    // no result, not load next time
-                    if( 0 == length) isNull = true;
-//                    if( length < ApiConstants.DEFAULT_SIZE) isNull = true;
-                    ArrayList<Article> list = new ArrayList<Article>();
-                    for(int i = 0; i < length; i++){
-                    	JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    	Article line = new Article();
-                    	line.id = jsonObject.getString("id");
-                    	line.author = jsonObject.getString("author");
-                    	line.issuedate = jsonObject.getString("issuedate");
-                    	line.title = jsonObject.getString("title");
-                    	line.type = jsonObject.getString("type");
-                    	line.desc = "有专家建议2015年全面放开二胎政策,也有专家说放开二胎政策,百害而无一利. 网间对其利弊也开始了热闹的讨论";
-                    	list.add(line);
-                    }
-                    
-                    adapter.getData().addAll(list);
-                } else {
-                	// TODO 更完善的异常处理
-                	isNull = true;
-                	throw new JSONException("Unexpected type " + result.getClass().getName());
+//         		if(responseBody.startsWith("{") || responseBody.startsWith("[")) {
+//         			result = new JSONTokener(responseBody).nextValue();
+//         		}
+         		
+         		JSONObject tmp = new JSONObject(responseBody);
+         		JSONArray jsonArray = tmp.getJSONArray("items");
+         		
+                int length = jsonArray.length();
+                // no result, not load next time
+                if( 0 == length) isNull = true;
+//                if( length < ApiConstants.DEFAULT_SIZE) isNull = true;
+                ArrayList<Article> list = new ArrayList<Article>();
+                for(int i = 0; i < length; i++){
+                	JSONObject jsonObject = jsonArray.getJSONObject(i);
+                	Article line = new Article();
+                	line.id = jsonObject.getString("id");
+                	line.author = jsonObject.getString("author");
+                	line.issuedate = jsonObject.getString("issuedate");
+                	line.title = jsonObject.getString("title");
+                	line.type = jsonObject.getString("type");
+                	line.desc = URLDecoder.decode(jsonObject.getString("content"), "utf-8");
+                	list.add(line);
                 }
+                
+                adapter.getData().addAll(list);
+             // TODO 更完善的异常处理
+//                isNull = true;
+//            	throw new JSONException("Unexpected type " + result.getClass().getName());
+         		
                 return null;
             }
 
@@ -143,6 +142,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             
             @Override
             public boolean onTaskFailed(Exception ex){
+            	// TODO
             	ArrayList<Article> list = new ArrayList<Article>();
             	Article line = new Article();
             	int start = adapter.getItemCount();
