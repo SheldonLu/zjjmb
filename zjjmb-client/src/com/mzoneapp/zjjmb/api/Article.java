@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 public class Article implements Serializable {
 
+	private static final long serialVersionUID = 2842941592921408125L;
 	public String id;
 	public String title;
 	public String author;

@@ -4,9 +4,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -75,8 +73,8 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     	type = getArguments().getString(ApiConstants.TYPE);
     	http = new IgnitedHttp(getActivity());
     	ListView listView = getListView();
-//    	listView.setCacheColorHint();
-//    	listView.setDivider(null);
+    	listView.setCacheColorHint(0);
+    	listView.setDivider(null);
     	adapter = new ArticleAdapter(getActivity(),listView);
     	
         setListAdapter(adapter);

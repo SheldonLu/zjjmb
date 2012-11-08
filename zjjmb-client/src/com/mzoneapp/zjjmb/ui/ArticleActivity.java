@@ -26,7 +26,7 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 		super.onCreate(savedInstanceState);
 		//This has to be called before setContentView and you must use the
         //class in com.actionbarsherlock.view and NOT android.view
-		requestWindowFeature(Window.FEATURE_PROGRESS);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		// If we are in two-pane layout mode, this activity is no longer
 		// necessary
 		if (getResources().getBoolean(R.bool.has_two_panes)) {
@@ -37,6 +37,7 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 		// set defaults for logo & home up
 		ab.setDisplayHomeAsUpEnabled(showHomeUp);
 		ab.setDisplayUseLogoEnabled(useLogo);
+		ab.setDisplayShowTitleEnabled(true);
 
 		// Place an ArticleFragment as our content pane
 		ArticleFragment f = new ArticleFragment();
@@ -45,17 +46,30 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 				.add(android.R.id.content, f).commit();
 		// Display the correct news article on the fragment
 		Bundle bd = getIntent().getExtras();
-		if(null == bd.getString("id")){
-			finish();
-			return;
+		String type = bd.getString("type");
+		if(null != type){
+			switch (1) {
+			case 0:
+				setTitle("通知公告");
+				break;
+			case 1:
+				setTitle("局内动态");
+				break;
+			case 2:
+				setTitle("工作动态");
+				break;
+			default:
+				finish();
+				return;
+			}
+			f.setArguments(bd);
 		}
-		f.setArguments(bd);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.activity_article, menu);
-		return true;
+		return (super.onCreateOptionsMenu(menu));
 	}
 
 	@Override
@@ -74,17 +88,17 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onTaskStarted() {
-		setProgressBarVisibility(true);
+		setSupportProgressBarIndeterminateVisibility(true);
 	}
 
 	@Override
 	public void onTaskCompleted() {
-		setProgressBarVisibility(false);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 	@Override
 	public void onTaskFailed() {
-		setProgressBarVisibility(false);
+		setSupportProgressBarIndeterminateVisibility(false);
 	}
 
 }

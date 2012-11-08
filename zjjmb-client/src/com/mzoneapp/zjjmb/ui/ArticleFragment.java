@@ -16,6 +16,8 @@
 
 package com.mzoneapp.zjjmb.ui;
 
+import java.net.URLDecoder;
+
 import org.json.JSONObject;
 
 import android.graphics.Color;
@@ -39,6 +41,7 @@ import com.github.ignition.support.http.IgnitedHttp;
 import com.mzoneapp.zjjmb.R;
 import com.mzoneapp.zjjmb.api.ApiConstants;
 import com.mzoneapp.zjjmb.api.Article;
+import com.mzoneapp.zjjmb.util.DateUtil;
 import com.viewpagerindicator.CirclePageIndicator;
 
 /**
@@ -113,7 +116,7 @@ public class ArticleFragment extends SherlockFragment {
 		mArticle = Article.fromBundleToArticle(getArguments());
 		if (null != mView && null != mArticle) {
 			mTitle.setText(mArticle.title);
-			mDatetime.setText(mArticle.issuedate);
+			mDatetime.setText(DateUtil.covertChinaDatetime(mArticle.issuedate, false));
 			mContent.setText(Html.fromHtml(mArticle.desc));
 			// show image view pager
 			if (mArticle.images != null) {
@@ -125,7 +128,7 @@ public class ArticleFragment extends SherlockFragment {
 				mIndicator.setViewPager(mPager);
 				final float density = getResources().getDisplayMetrics().density;
 				mIndicator.setBackgroundColor(0x40000000);
-				mIndicator.setRadius(4 * density);
+				mIndicator.setRadius(6 * density);
 				mIndicator.setPageColor(0xFFFFFFFF);
 				mIndicator.setFillColor(Color.rgb(50,181,229));
 //				mIndicator.setStrokeColor(0xFFFFFFFF);
@@ -167,7 +170,7 @@ public class ArticleFragment extends SherlockFragment {
 						Article article = new Article();
 						article.id = id;
 						article.author = author;
-						article.desc = content;
+						article.desc = URLDecoder.decode(content, "utf-8");
 						article.title = title;
 						article.issuedate = issuedate;
 						return article;

@@ -22,4 +22,6 @@
 	<color name="color_list_title">#ff000000</color>
     <color name="color_list_desc">#ff777777</color>
     <color name="color_list_selected">#ffffffff</color>
+    <color name="color_one">#a4a3a3</color>
+    <color name="color_two">#ffffffff</color>
 </resources>

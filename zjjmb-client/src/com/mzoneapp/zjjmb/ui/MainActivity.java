@@ -49,6 +49,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// set defaults for logo & home up
 		ab.setDisplayHomeAsUpEnabled(showHomeUp);
 		ab.setDisplayUseLogoEnabled(useLogo);
+		ab.setTitle("省交通厅质监局移动平台");
 		// ab.setLogo(R.drawable.ic_stat_android);
 
 		mViewPager = (ViewPager) findViewById(R.id.pager);
@@ -140,7 +141,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 	private void showTabsNav() {
 		ActionBar ab = getSupportActionBar();
 		if (ab.getNavigationMode() != ActionBar.NAVIGATION_MODE_TABS) {
-			ab.setDisplayShowTitleEnabled(false);
+			ab.setDisplayShowTitleEnabled(true);
 			ab.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		}
 	}

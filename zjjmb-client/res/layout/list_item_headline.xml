@@ -1,11 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ignition="http://github.com/ignition/schema"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:paddingBottom="0dp"
-    android:paddingLeft="8dp"
-    android:paddingRight="8dp"
-    android:paddingTop="8dp" >
+    android:layout_height="wrap_content" >
 
     <TextView
         android:id="@+id/title"
@@ -13,9 +9,11 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:maxLines="2"
-        android:text="专家呼吁全面放开二胎政策 专家呼吁全面放开二胎政策 " />
-    
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:maxLines="2" />
+
     <TextView
         android:id="@+id/desc"
         style="@style/text_list_desc"
@@ -25,21 +23,20 @@
         android:layout_below="@id/title"
         android:layout_marginTop="8dp"
         android:layout_toLeftOf="@+id/leftLayout"
-        android:maxLines="3"
-        android:text="有专家建议2015年全面放开二胎政策,也有专家说放开二胎政策,百害而无一利. 网间对其利弊也开始了热闹的讨论" />
+        android:maxLines="3" />
 
-	<RelativeLayout
+    <RelativeLayout
         android:id="@+id/leftLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/desc" >
+        android:layout_alignTop="@id/desc"
+        android:layout_below="@id/title" >
 
         <com.github.ignition.core.widgets.RemoteImageView
             android:id="@+id/image"
             android:layout_width="58dp"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             ignition:imageUrl="http://developer.android.com/images/home/android-design.png" />
 
         <TextView
@@ -48,8 +45,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/image"
-            android:gravity="center_horizontal"
-            android:text="2012-12-12" />
+            android:gravity="center_horizontal" />
     </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f9f9f9" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/leftLayout"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/listspit" />
 
 </RelativeLayout>
