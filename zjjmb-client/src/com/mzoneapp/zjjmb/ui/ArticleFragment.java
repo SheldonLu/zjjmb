@@ -56,6 +56,7 @@ public class ArticleFragment extends SherlockFragment {
 	TextView mDatetime;
 	TextView mContent;
 	RelativeLayout mLayoutPager;
+	View mLoading;
 
 	// The article we are to display
 	Article mArticle = null;
@@ -96,6 +97,7 @@ public class ArticleFragment extends SherlockFragment {
 		mDatetime = (TextView) mView.findViewById(R.id.txt_datetime);
 		mContent = (TextView) mView.findViewById(R.id.txt_content);
 		mLayoutPager = (RelativeLayout) mView.findViewById(R.id.layout_pager);
+		mLoading = mView.findViewById(R.id.view_loading);
 		return mView;
 	}
 
@@ -127,16 +129,19 @@ public class ArticleFragment extends SherlockFragment {
 				mLayoutPager.setVisibility(View.VISIBLE);
 				ImageFragmentAdapter adapter = new ImageFragmentAdapter(
 						getFragmentManager());
+				mPager.setOffscreenPageLimit(mArticle.images.length-1);
 				adapter.setImages(mArticle.images);
 				mPager.setAdapter(adapter);
-				mIndicator.setViewPager(mPager);
-				final float density = getResources().getDisplayMetrics().density;
-				mIndicator.setBackgroundColor(0x40000000);
-				mIndicator.setRadius(6 * density);
-				mIndicator.setPageColor(0xFFFFFFFF);
-				mIndicator.setFillColor(Color.rgb(50,181,229));
+				if(mArticle.images.length < 1){
+					mIndicator.setViewPager(mPager);
+					final float density = getResources().getDisplayMetrics().density;
+//				mIndicator.setBackgroundColor(0x40000000);
+					mIndicator.setRadius(6 * density);
+					mIndicator.setPageColor(0xFFFFFFFF);
+					mIndicator.setFillColor(Color.rgb(50,181,229));
 //				mIndicator.setStrokeColor(0xFFFFFFFF);
 //				mIndicator.setStrokeWidth(1 * density);
+				}
 			}
 		}
 	}
@@ -156,6 +161,7 @@ public class ArticleFragment extends SherlockFragment {
 			@Override
 			public boolean onTaskStarted() {
 				mArticleTaskListener.onTaskStarted();
+				mLoading.setVisibility(View.VISIBLE);
 				return super.onTaskStarted();
 			}
 
@@ -175,6 +181,9 @@ public class ArticleFragment extends SherlockFragment {
 						article.id = id;
 						article.author = author;
 						article.desc = URLDecoder.decode(content, "utf-8");
+						String strPattern = "<img(?:.*)src=(\"{1}|\'{1})([^\\[^>]+[gif|jpg|jpeg|bmp|bmp]*)(\"{1}|\'{1})(?:.*)>";
+						article.images = article.desc.split(strPattern);
+						article.desc = article.desc.replaceAll(strPattern, "");
 						article.title = title;
 						article.issuedate = issuedate;
 						return article;
@@ -188,6 +197,7 @@ public class ArticleFragment extends SherlockFragment {
 			@Override
 			public boolean onTaskCompleted(Article result) {
 				mArticleTaskListener.onTaskCompleted();
+				mLoading.setVisibility(View.GONE);
 				if(null != result){
 					mArticle = result;
 					loadArticleView();
@@ -198,6 +208,7 @@ public class ArticleFragment extends SherlockFragment {
 			@Override
 			public boolean onTaskFailed(Exception error) {
 				mArticleTaskListener.onTaskFailed();
+				mLoading.setVisibility(View.GONE);
 				return super.onTaskFailed(error);
 			}
 			
