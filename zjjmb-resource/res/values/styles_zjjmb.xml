@@ -49,16 +49,19 @@
         <item name="android:backgroundStacked">@drawable/ab_stacked_solid_zjjmb</item>
         <item name="android:backgroundSplit">@drawable/ab_bottom_solid_zjjmb</item>
         <item name="android:progressBarStyle">@style/zjjmb_ProgressBar</item>
-        <item name="android:indeterminateProgressStyle">@style/loading_small</item>
-        <item name="indeterminateProgressStyle">@style/loading_small</item>
+        <item name="android:indeterminateProgressStyle">@style/IndeterminateProgress</item>
+        <item name="indeterminateProgressStyle">@style/IndeterminateProgress</item>
     </style>
 
-    <style name="IndeterminateProgress" parent="@android:style/Widget.ProgressBar.Large">
+    <style name="IndeterminateProgress" parent="@android:style/Widget.ProgressBar.Small">
+        <item name="android:minWidth">48dp</item>
+        <!--
         <item name="android:indeterminateDrawable">@anim/loading</item>
         <item name="android:layout_width">21dip</item>
         <item name="android:layout_height">21dip</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:gravity">center</item>
+        -->
     </style>
 
     <style name="zjjmb_transparent_ActionBar" parent="@style/Widget.Sherlock.ActionBar">

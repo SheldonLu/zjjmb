@@ -2,9 +2,10 @@
     xmlns:ignition="http://github.com/ignition/schema"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:paddingBottom="2dp"
     android:paddingLeft="8dp"
-    android:paddingTop="8dp"
-    android:paddingRight="8dp" >
+    android:paddingRight="4dp"
+    android:paddingTop="8dp" >
 
     <TextView
         android:id="@+id/title"
@@ -14,42 +15,50 @@
         android:layout_alignParentTop="true"
         android:maxLines="2" />
 
-    <TextView
-        android:id="@+id/desc"
-        style="@style/text_list_desc"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/layout_body"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@id/title"
         android:layout_below="@id/title"
-        android:layout_marginTop="8dp"
-        android:layout_toLeftOf="@+id/leftLayout"
-        android:maxLines="3" />
+        android:layout_marginTop="5dp" >
 
-    <RelativeLayout
-        android:id="@+id/leftLayout"
+        <TextView
+            android:id="@+id/desc"
+            style="@style/text_list_desc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/layout_image"
+            android:maxLines="3" />
+
+        <LinearLayout
+            android:id="@+id/layout_image"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:visibility="gone" >
+
+            <com.github.ignition.core.widgets.RemoteImageView
+                android:id="@+id/image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                ignition:autoLoad="false" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/dateText"
+        style="@style/text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/desc"
-        android:layout_below="@id/title" >
+        android:layout_below="@id/layout_body"
+        android:layout_marginRight="5dp" />
 
-        <com.github.ignition.core.widgets.RemoteImageView
-            android:id="@+id/image"
-            android:layout_width="58dp"
-            android:layout_height="wrap_content"
-            android:maxHeight="65dp"
-            ignition:imageUrl="http://developer.android.com/images/home/android-design.png" />
-
-        <TextView
-            android:id="@+id/dateText"
-            style="@style/text_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/image"
-            android:gravity="center_horizontal" />
-    </RelativeLayout>
-
-    <!--  View
+    <!--
+    View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#f9f9f9" />
@@ -59,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/leftLayout"
         android:layout_marginTop="5dp"
-        android:background="@drawable/listspit" /-->
+        android:background="@drawable/listspit" /
+    -->
 
 </RelativeLayout>
