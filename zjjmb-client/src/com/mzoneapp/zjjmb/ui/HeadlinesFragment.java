@@ -48,6 +48,12 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
 
     // The listener we are to notify when a headline is selected
     OnHeadlineSelectedListener mHeadlineSelectedListener = null;
+    
+    OnRefreshCallBack onRefeshCallBack;
+    
+	public interface OnRefreshCallBack {
+		void setProgressBar(boolean refresh);
+	}
 
     /**
      * Represents a listener that will be notified of headline selections.
@@ -58,6 +64,10 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
          * @param index the index of the selected headline.
          */
         public void onHeadlineSelected(int index);
+    }
+    
+    public void setRefreshCallBack(OnRefreshCallBack onRefeshCallBack) {
+    	this.onRefeshCallBack = onRefeshCallBack;
     }
 
     /**
@@ -99,7 +109,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
 				refresh();
             }
         });
-        loadNextPage(false);
+        loadNextPage(true);
         
 //        isLoaded = true;
     }
@@ -107,6 +117,11 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     private void loadNextPage(final boolean clearBefore) {
     	if(!clearBefore)
     		adapter.setIsLoadingData(true);
+    	else{
+    		if(null != this.onRefeshCallBack){
+    			this.onRefeshCallBack.setProgressBar(true);
+    		}
+    	}
     	
         IgnitedAsyncTask<MainActivity, Void, Void, Void> task = new IgnitedAsyncTask<MainActivity, Void, Void, Void>() {
             @Override
@@ -130,8 +145,13 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
          		JSONArray jsonArray = tmp.getJSONArray("items");
          		
                 int length = jsonArray.length();
+                // reset isNull;
+                isNull = false;
                 // no result, not load next time
-                if( 0 == length) isNull = true;
+                if( 0 == length) {
+                	isNull = true;
+                	return null;
+                }
 //                if( length < ApiConstants.DEFAULT_SIZE) isNull = true;
                 ArrayList<Article> list = new ArrayList<Article>();
                 for(int i = 0; i < length; i++){
@@ -142,6 +162,11 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
                 	line.issuedate = jsonObject.getString("issuedate");
                 	line.title = jsonObject.getString("title");
                 	line.type = jsonObject.getString("type");
+                	String imgurl = jsonObject.getString("imgurl");
+                	
+                	if( null != imgurl &&imgurl.startsWith("http"))
+                		line.images = new String[]{imgurl};
+                	
                 	line.desc = URLDecoder.decode(jsonObject.getString("content"), "utf-8");
                 	list.add(line);
                 }
@@ -162,6 +187,12 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
             	onRefreshComplete();
                 adapter.setIsLoadingData(false);
                 adapter.notifyDataSetChanged();
+                if(clearBefore){ 
+                	getListView().setSelection(0);
+            		if(null != onRefeshCallBack){
+            			onRefeshCallBack.setProgressBar(false);
+            		}
+                }
                 return true;
             }
             
@@ -244,4 +275,5 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
 		((PullToRefreshListView)getListView()).onScrollStateChanged(view, scrollState);
 		
 	}
+
 }

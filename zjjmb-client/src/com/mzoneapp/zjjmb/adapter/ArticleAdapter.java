@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.ignition.core.adapters.EndlessListAdapter;
@@ -81,7 +82,18 @@ public class ArticleAdapter extends EndlessListAdapter<Article> {
 
 		Article article = getItem(position);
 
-		RemoteImageView icon = (RemoteImageView) convertView.findViewById(R.id.image);
+		RemoteImageView image = (RemoteImageView) convertView.findViewById(R.id.image);
+		LinearLayout layout = (LinearLayout)convertView.findViewById(R.id.layout_image);
+		if(article.images != null){
+			layout.setVisibility(View.VISIBLE);
+			if(!image.isLoaded()){
+				image.setImageUrl(article.images[0]);
+				image.loadImage();
+			}
+		}else{
+			layout.setVisibility(View.GONE);
+		}
+		
 		TextView title = (TextView) convertView.findViewById(R.id.title);
 		TextView desc = (TextView) convertView.findViewById(R.id.desc);
 		TextView date = (TextView) convertView.findViewById(R.id.dateText);

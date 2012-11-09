@@ -18,9 +18,6 @@ import android.widget.TextView;
 
 /**
  * 下拉刷新控件
- * @author liux (http://my.oschina.net/liux)
- * @version 1.0
- * @created 2012-3-21
  */
 public class PullToRefreshListView extends ListView implements OnScrollListener {  
 	   
@@ -115,14 +112,17 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
         setOnScrollListener(this); 
     }  
   
+    @Override
     public void onScroll(AbsListView view, int firstVisiableItem, int visibleItemCount,  int totalItemCount) {  
         firstItemIndex = firstVisiableItem;  
     }  
   
+    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {  
     	currentScrollState = scrollState;
     }  
   
+    @Override
     public boolean onTouchEvent(MotionEvent event) {  
         switch (event.getAction()) {  
         case MotionEvent.ACTION_DOWN:  

@@ -3,6 +3,7 @@ package com.mzoneapp.zjjmb.ui;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -14,11 +15,14 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.mzoneapp.zjjmb.R;
 import com.mzoneapp.zjjmb.api.ApiConstants;
+import com.mzoneapp.zjjmb.ui.HeadlinesFragment.OnRefreshCallBack;
 
 public class MainActivity extends SherlockFragmentActivity implements
-		CompatActionBarNavListener {
+		CompatActionBarNavListener,OnRefreshCallBack{
 
 	private boolean useLogo = true;
 	private boolean showHomeUp = false;
@@ -36,9 +40,12 @@ public class MainActivity extends SherlockFragmentActivity implements
 	TabsAdapter mTabsAdapter;
 	ViewPager mViewPager;
 	
+	boolean mRefresh = false; 
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		setContentView(R.layout.main_layout);
 
 		// TODO: 更改创建时间
@@ -56,6 +63,7 @@ public class MainActivity extends SherlockFragmentActivity implements
 
 		mTabsAdapter = new TabsAdapter(this, mViewPager);
 
+		
 		Bundle bundle = new Bundle();
 		bundle.putString(ApiConstants.TYPE, ApiConstants.ANNOUNCEMENT);
 		mTabsAdapter.addTab(ab.newTab().setText("通知公告"),
@@ -97,6 +105,21 @@ public class MainActivity extends SherlockFragmentActivity implements
 		// mHeadlinesFragment.setSelectable(mIsDualPane);
 		// restoreSelection(savedInstanceState);
 
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu (Menu menu) {
+	    if (mRefresh)
+	        menu.getItem(0).setVisible(false);
+	    else
+	    	menu.getItem(0).setVisible(true);
+	    return true;
+	}
+	
+	@Override
+	public void setProgressBar(boolean refresh) {
+		setSupportProgressBarIndeterminateVisibility(mRefresh = refresh);
+		invalidateOptionsMenu();
 	}
 
 	/** Restore category/article selection from saved state. */
@@ -175,15 +198,26 @@ public class MainActivity extends SherlockFragmentActivity implements
 		outState.putInt("artIndex", mArtIndex);
 		super.onSaveInstanceState(outState);
 	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_reflesh:
+			mTabsAdapter.refresh();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-	public static class TabsAdapter extends FragmentPagerAdapter implements
+	public class TabsAdapter extends FragmentPagerAdapter implements
 			ActionBar.TabListener, ViewPager.OnPageChangeListener {
 		private final Context mContext;
 		private final ActionBar mActionBar;
 		private final ViewPager mViewPager;
 		private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
-		static final class TabInfo {
+		final class TabInfo {
 			private final Class<?> clss;
 			private final Bundle args;
 
@@ -212,8 +246,9 @@ public class MainActivity extends SherlockFragmentActivity implements
 		}
 		
 		public void refresh(){
-			int position = mActionBar.getSelectedNavigationIndex();
-//			((HeadlinesFragment)mFragments.get(position)).refresh();
+			HeadlinesFragment fragment = (HeadlinesFragment)instantiateItem(mViewPager, mViewPager.getCurrentItem());
+//			mViewPager.gett
+			fragment.refresh();
 		}
 
 		@Override
@@ -224,8 +259,10 @@ public class MainActivity extends SherlockFragmentActivity implements
 		@Override
 		public Fragment getItem(int position) {
 			TabInfo info = mTabs.get(position);
-			return Fragment.instantiate(mContext, info.clss.getName(),
+			HeadlinesFragment fragment = (HeadlinesFragment)Fragment.instantiate(mContext, info.clss.getName(),
 					info.args);
+			fragment.setRefreshCallBack(MainActivity.this);
+			return fragment;
 //			return mFragments.get(position);
 		}
 
