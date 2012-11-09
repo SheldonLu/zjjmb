@@ -239,7 +239,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         if (null != mHeadlineSelectedListener) {
             mHeadlineSelectedListener.onHeadlineSelected(position);
         }
-        if(adapter.getData().size() > position){
+        if(adapter.getData().size()-1 > position){
         	Article article = adapter.getData().get(position-1);
         	Intent i = new Intent(getActivity(), ArticleActivity.class);
         	i.putExtras(Article.convertArticleToBundle(article));

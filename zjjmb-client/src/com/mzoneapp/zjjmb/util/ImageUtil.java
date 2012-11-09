@@ -35,6 +35,9 @@ public class ImageUtil {
 		while (m_image.find()) {
 			img = img + m_image.group()+",";
 		}
+		if("".equals(img)){
+			return null;
+		}
 		if (img.indexOf(",") >= 0)
 			return img.substring(0, img.length()-1).split(",");
 		else

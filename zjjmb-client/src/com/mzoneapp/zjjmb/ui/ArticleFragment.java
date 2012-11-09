@@ -106,7 +106,7 @@ public class ArticleFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mArticleId = Article.fromBundleToArticle(getArguments()).id;
-		loadArticleView(Article.fromBundleToArticle(getArguments()));
+//		loadArticleView(Article.fromBundleToArticle(getArguments()));
 		executeArticleTask();
 	}
 	
@@ -126,18 +126,18 @@ public class ArticleFragment extends SherlockFragment {
 			mDatetime.setText(DateUtil.covertChinaDatetime(article.issuedate, false));
 			mContent.setText(Html.fromHtml(article.desc));
 			// show image view pager
-			if (article.images != null) {
+			if (article.images != null && article.images.length > 0) {
 				mLayoutPager.setVisibility(View.VISIBLE);
 				ImageFragmentAdapter adapter = new ImageFragmentAdapter(
 						getFragmentManager());
 				mPager.setOffscreenPageLimit(article.images.length-1);
 				adapter.setImages(article.images);
 				mPager.setAdapter(adapter);
-				mIndicator.setViewPager(mPager);
 				if(article.images.length > 1){
+						mIndicator.setViewPager(mPager);
 						final float density = getResources().getDisplayMetrics().density;
 	//				mIndicator.setBackgroundColor(0x40000000);
-						mIndicator.setRadius(6 * density);
+						mIndicator.setRadius(4 * density);
 						mIndicator.setPageColor(0xFFFFFFFF);
 						mIndicator.setFillColor(Color.rgb(50,181,229));
 	//				mIndicator.setStrokeColor(0xFFFFFFFF);
@@ -288,7 +288,7 @@ public class ArticleFragment extends SherlockFragment {
 				RemoteImageView rImg = ((RemoteImageView) getView()
 						.findViewById(R.id.thumbnail));
 				String url = getImageUrl();
-				if (null != url) {
+				if (null != url && !rImg.isLoaded()) {
 					rImg.setImageUrl(url);
 					rImg.loadImage();
 				}
