@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -240,10 +239,12 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         if (null != mHeadlineSelectedListener) {
             mHeadlineSelectedListener.onHeadlineSelected(position);
         }
-        Article article = adapter.getData().get(position);
-        Intent i = new Intent(getActivity(), ArticleActivity.class);
-        i.putExtras(Article.convertArticleToBundle(article));
-        startActivity(i);
+        if(adapter.getData().size() > position){
+        	Article article = adapter.getData().get(position-1);
+        	Intent i = new Intent(getActivity(), ArticleActivity.class);
+        	i.putExtras(Article.convertArticleToBundle(article));
+        	startActivity(i);
+        }
     }
 
     /** Sets choice mode for the list

@@ -42,6 +42,7 @@ import com.mzoneapp.zjjmb.R;
 import com.mzoneapp.zjjmb.api.ApiConstants;
 import com.mzoneapp.zjjmb.api.Article;
 import com.mzoneapp.zjjmb.util.DateUtil;
+import com.mzoneapp.zjjmb.util.ImageUtil;
 import com.viewpagerindicator.CirclePageIndicator;
 
 /**
@@ -58,8 +59,8 @@ public class ArticleFragment extends SherlockFragment {
 	RelativeLayout mLayoutPager;
 	View mLoading;
 
-	// The article we are to display
-	Article mArticle = null;
+	// The id we are to execute task
+	String mArticleId = null;
 	
 	// Represents a listener that will be notified of ArticleTask
 	ArticleTaskListener mArticleTaskListener = null;
@@ -104,7 +105,8 @@ public class ArticleFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		loadArticleView();
+		mArticleId = Article.fromBundleToArticle(getArguments()).id;
+		loadArticleView(Article.fromBundleToArticle(getArguments()));
 		executeArticleTask();
 	}
 	
@@ -118,29 +120,28 @@ public class ArticleFragment extends SherlockFragment {
 	 * This method is called internally to update the webview's contents to the
 	 * appropriate article's text.
 	 */
-	void loadArticleView() {
-		mArticle = Article.fromBundleToArticle(getArguments());
-		if (null != mView && null != mArticle) {
-			mTitle.setText(mArticle.title);
-			mDatetime.setText(DateUtil.covertChinaDatetime(mArticle.issuedate, false));
-			mContent.setText(Html.fromHtml(mArticle.desc));
+	void loadArticleView(Article article) {
+		if (null != mView && null != article) {
+			mTitle.setText(article.title);
+			mDatetime.setText(DateUtil.covertChinaDatetime(article.issuedate, false));
+			mContent.setText(Html.fromHtml(article.desc));
 			// show image view pager
-			if (mArticle.images != null) {
+			if (article.images != null) {
 				mLayoutPager.setVisibility(View.VISIBLE);
 				ImageFragmentAdapter adapter = new ImageFragmentAdapter(
 						getFragmentManager());
-				mPager.setOffscreenPageLimit(mArticle.images.length-1);
-				adapter.setImages(mArticle.images);
+				mPager.setOffscreenPageLimit(article.images.length-1);
+				adapter.setImages(article.images);
 				mPager.setAdapter(adapter);
-				if(mArticle.images.length < 1){
-					mIndicator.setViewPager(mPager);
-					final float density = getResources().getDisplayMetrics().density;
-//				mIndicator.setBackgroundColor(0x40000000);
-					mIndicator.setRadius(6 * density);
-					mIndicator.setPageColor(0xFFFFFFFF);
-					mIndicator.setFillColor(Color.rgb(50,181,229));
-//				mIndicator.setStrokeColor(0xFFFFFFFF);
-//				mIndicator.setStrokeWidth(1 * density);
+				mIndicator.setViewPager(mPager);
+				if(article.images.length > 1){
+						final float density = getResources().getDisplayMetrics().density;
+	//				mIndicator.setBackgroundColor(0x40000000);
+						mIndicator.setRadius(6 * density);
+						mIndicator.setPageColor(0xFFFFFFFF);
+						mIndicator.setFillColor(Color.rgb(50,181,229));
+	//				mIndicator.setStrokeColor(0xFFFFFFFF);
+	//				mIndicator.setStrokeWidth(1 * density);
 				}
 			}
 		}
@@ -150,8 +151,6 @@ public class ArticleFragment extends SherlockFragment {
 	 * get article data from network.
 	 */
 	void executeArticleTask(){
-		if(null == mArticle)
-			return;
 		if(null != mArticleTask) {
 			if (mArticleTask.isPending())
 				mArticleTask.cancel(true);
@@ -181,9 +180,8 @@ public class ArticleFragment extends SherlockFragment {
 						article.id = id;
 						article.author = author;
 						article.desc = URLDecoder.decode(content, "utf-8");
-						String strPattern = "<img(?:.*)src=(\"{1}|\'{1})([^\\[^>]+[gif|jpg|jpeg|bmp|bmp]*)(\"{1}|\'{1})(?:.*)>";
-						article.images = article.desc.split(strPattern);
-						article.desc = article.desc.replaceAll(strPattern, "");
+						article.images = ImageUtil.getImgStr(article.desc);
+						article.desc = ImageUtil.resetImages(article.desc);
 						article.title = title;
 						article.issuedate = issuedate;
 						return article;
@@ -199,8 +197,7 @@ public class ArticleFragment extends SherlockFragment {
 				mArticleTaskListener.onTaskCompleted();
 				mLoading.setVisibility(View.GONE);
 				if(null != result){
-					mArticle = result;
-					loadArticleView();
+					loadArticleView(result);
 				}
 				return super.onTaskCompleted(result);
 			}
@@ -213,7 +210,7 @@ public class ArticleFragment extends SherlockFragment {
 			}
 			
 		};
-		mArticleTask.execute(mArticle.id);
+		mArticleTask.execute(mArticleId);
 	}
 	
 	public static class ImageFragmentAdapter extends FragmentPagerAdapter {
