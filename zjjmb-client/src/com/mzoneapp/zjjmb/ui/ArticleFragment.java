@@ -106,7 +106,10 @@ public class ArticleFragment extends SherlockFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mArticleId = Article.fromBundleToArticle(getArguments()).id;
-//		loadArticleView(Article.fromBundleToArticle(getArguments()));
+		Article article = Article.fromBundleToArticle(getArguments());
+		article.images = null;
+		article.desc = "";
+		loadArticleView(article);
 		executeArticleTask();
 	}
 	
@@ -160,7 +163,7 @@ public class ArticleFragment extends SherlockFragment {
 			@Override
 			public boolean onTaskStarted() {
 				mArticleTaskListener.onTaskStarted();
-				mLoading.setVisibility(View.VISIBLE);
+				mLoading.setVisibility(View.GONE);
 				return super.onTaskStarted();
 			}
 
