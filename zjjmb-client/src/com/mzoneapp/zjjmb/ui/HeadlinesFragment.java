@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -243,8 +244,24 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         	Article article = adapter.getData().get(position-1);
         	Intent i = new Intent(getActivity(), ArticleActivity.class);
         	i.putExtras(Article.convertArticleToBundle(article));
-        	startActivity(i);
+//        	startActivity(i);
+        	startActivityForResult(i, 1);
         }
+    }
+    
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	if(requestCode ==1 && resultCode ==1 && data != null){
+    		String mArticleId = data.getStringExtra("id");		
+    		SharedPreferences settings = getActivity().getSharedPreferences("articel_read_ids", 0);
+    		boolean flag = settings.getBoolean(mArticleId, false);
+    		if(!flag){
+    			settings.edit().putBoolean(mArticleId, true).commit();
+    			adapter.notifyDataSetChanged();
+    		}
+    		
+    	}
     }
 
     /** Sets choice mode for the list

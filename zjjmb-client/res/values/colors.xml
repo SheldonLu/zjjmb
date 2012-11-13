@@ -19,7 +19,9 @@
     <color name="honeycombish_blue">#FF58BAED</color>
     <color name="soft_grey">#FF777777</color>
     <color name="background">#FFEFEFEF</color>
-	<color name="color_list_title">#ff000000</color>
+	<color name="color_list_title">#3173A5</color>
+    <color name="color_list_title_read">#FF777777</color>
+    <color name="color_list_title_new">#EA5347</color>
     <color name="color_list_desc">#ff777777</color>
     <color name="color_list_selected">#ffffffff</color>
     <color name="color_one">#a4a3a3</color>

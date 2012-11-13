@@ -76,6 +76,15 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 			}
 		}
 	}
+	
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent();
+		intent.putExtra("id", mAf.mArticleId);
+		this.setResult(1, intent);
+		finish();
+//		super.onBackPressed();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

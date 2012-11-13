@@ -1,8 +1,15 @@
 package com.mzoneapp.zjjmb.adapter;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -21,10 +28,15 @@ public class ArticleAdapter extends EndlessListAdapter<Article> {
 	private static final String LOG_TAG = ArticleAdapter.class.getName();
 	private final LayoutInflater inflater;
 	private long lastUpdate = -1;
+	private Activity activity;
+	private Resources rs;
+	private SharedPreferences settings;
 
 	public ArticleAdapter(Activity activity,AbsListView listView) {
 		super(activity, listView, R.layout.loading_item);
-
+		this.activity = activity;
+		rs = activity.getResources();
+		settings = activity.getSharedPreferences("articel_read_ids", 0);
 		inflater = LayoutInflater.from(activity);
 	}
 
@@ -73,6 +85,7 @@ public class ArticleAdapter extends EndlessListAdapter<Article> {
 		return true;
 	}
 
+	@SuppressLint("ResourceAsColor")
 	@Override
 	protected View doGetView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
@@ -101,6 +114,26 @@ public class ArticleAdapter extends EndlessListAdapter<Article> {
 		title.setText(article.title);
 //		desc.setText(headline.desc);
 		desc.setText(article.desc);
+		String id = article.id;
+		boolean flag = settings.getBoolean(id, false);
+		title.setTextColor(rs.getColor(R.color.color_list_title));
+		if(flag){
+			// 已读
+			title.setTextColor(rs.getColor(R.color.list_title_text_selector_read));
+		}else{
+			// 最新
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			try {
+				long l = (new Date().getTime()) - df.parse(article.issuedate).getTime();
+				if(l/1000/24/3600 < 10){
+					title.setTextColor(rs.getColor(R.color.list_title_text_selector_new));
+				}
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
 		date.setText(article.issuedate.split(" ")[0]);
 
 		return convertView;

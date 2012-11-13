@@ -31,6 +31,7 @@
         <item name="android:popupMenuStyle">@style/zjjmb_PopupMenu</item>
         <item name="android:dropDownListViewStyle">@style/zjjmb_DropDownListView</item>
         <item name="android:actionBarTabStyle">@style/zjjmb_ActionBarTabStyle</item>
+        <item name="android:actionBarTabTextStyle">@style/zjjmb_ActionBarTabTextStyle</item>
         <item name="android:actionDropDownStyle">@style/zjjmb_DropDownNav</item>
         <item name="android:actionBarStyle">@style/zjjmb_solid_ActionBar</item>
         <item name="android:panelBackground">@drawable/menu_hardkey_panel_zjjmb</item>
@@ -86,8 +87,10 @@
 
     <style name="zjjmb_ActionBarTabTextStyle" parent="@style/Widget.Sherlock.ActionBar.TabText">
         <item name="android:textAppearance">@android:style/TextAppearance.Medium</item>
-        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textColor">@color/color_selector</item>
         <item name="android:textSize">18sp</item>
+		<item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
 
     <style name="zjjmb_DropDownNav" parent="@style/Widget.Sherlock.Spinner.DropDown.ActionBar">
