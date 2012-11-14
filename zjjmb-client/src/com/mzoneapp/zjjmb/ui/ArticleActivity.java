@@ -83,7 +83,7 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 		intent.putExtra("id", mAf.mArticleId);
 		this.setResult(1, intent);
 		finish();
-//		overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);  
+		overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);  
 //		super.onBackPressed();
 	}
 
@@ -99,9 +99,10 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			// app icon in action bar clicked; go home
-			Intent intent = new Intent(this, MainActivity.class);
-			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivity(intent);
+//			Intent intent = new Intent(this, MainActivity.class);
+//			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//			startActivity(intent);
+			onBackPressed();
 			return true;
 		case R.id.menu_reflesh:
 			mAf.reflersh();
