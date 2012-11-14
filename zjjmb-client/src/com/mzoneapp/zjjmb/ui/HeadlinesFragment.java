@@ -215,7 +215,8 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
     }
     
     private void onRefreshComplete(){
-    	((PullToRefreshListView)getListView()).onRefreshComplete("最近更新："+new Date().toLocaleString());
+    	if(getListView().isEnabled())
+    		((PullToRefreshListView)getListView()).onRefreshComplete("最近更新："+new Date().toLocaleString());
     }
     
     public void refresh(){

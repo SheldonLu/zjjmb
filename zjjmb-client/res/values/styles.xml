@@ -9,7 +9,7 @@
     <style name="text_list_desc">
         <item name="android:textSize">14.0sp</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/list_desc_text_selector</item>
+        <item name="android:textColor">@color/color_list_desc</item>
         <item name="android:lineSpacingExtra">8.0px</item>
     </style>
 
