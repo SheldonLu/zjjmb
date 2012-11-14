@@ -138,11 +138,13 @@ public class ArticleFragment extends SherlockFragment {
 				mPager.setAdapter(adapter);
 				if(article.images.length > 1){
 						mIndicator.setViewPager(mPager);
-						final float density = getResources().getDisplayMetrics().density;
-	//				mIndicator.setBackgroundColor(0x40000000);
-						mIndicator.setRadius(4 * density);
-						mIndicator.setPageColor(0xFFFFFFFF);
-						mIndicator.setFillColor(Color.rgb(50,181,229));
+						if(getActivity() !=null &&!getActivity().isFinishing()){
+							final float density = getResources().getDisplayMetrics().density;
+							//				mIndicator.setBackgroundColor(0x40000000);
+							mIndicator.setRadius(4 * density);
+							mIndicator.setPageColor(0xFFFFFFFF);
+							mIndicator.setFillColor(Color.rgb(50,181,229));
+						}
 	//				mIndicator.setStrokeColor(0xFFFFFFFF);
 	//				mIndicator.setStrokeWidth(1 * density);
 				}

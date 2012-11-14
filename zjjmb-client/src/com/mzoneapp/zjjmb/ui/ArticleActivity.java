@@ -83,6 +83,7 @@ public class ArticleActivity extends SherlockFragmentActivity implements
 		intent.putExtra("id", mAf.mArticleId);
 		this.setResult(1, intent);
 		finish();
+//		overridePendingTransition(R.anim.slide_in_up,R.anim.slide_out_down);  
 //		super.onBackPressed();
 	}
 

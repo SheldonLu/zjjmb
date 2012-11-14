@@ -246,6 +246,7 @@ public class HeadlinesFragment extends SherlockListFragment implements OnItemCli
         	i.putExtras(Article.convertArticleToBundle(article));
 //        	startActivity(i);
         	startActivityForResult(i, 1);
+//        	getActivity().overridePendingTransition(R.anim.slide_out_down,R.anim.slide_in_up);  
         }
     }
     
