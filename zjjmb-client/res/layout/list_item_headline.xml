@@ -35,10 +35,11 @@
         <LinearLayout
             android:id="@+id/layout_image"
             android:layout_width="65dp"
-            android:layout_height="65dp"
+            android:layout_height="60dp"
             android:layout_marginLeft="3dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:gravity="center"
             android:visibility="gone" >
 
             <com.github.ignition.core.widgets.RemoteImageView
@@ -57,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_below="@id/layout_body"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="7dp" />
 
     <!--
     View
